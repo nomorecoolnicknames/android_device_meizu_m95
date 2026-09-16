@@ -1,0 +1,45 @@
+# Domains for init-run shell scripts. Both services run the vendor shell, so
+# the domain is set with seclabel in the rc file (the power trap has its own
+# file, powertrap.te).
+
+# m95_cpuset: CPU placement, thermal and LMK patrol (m95-cpuset.sh)
+type m95_cpuset, domain;
+allow init m95_cpuset:process transition;
+allow m95_cpuset vendor_shell_exec:file { read open getattr execute entrypoint map };
+allow m95_cpuset init:process sigchld;
+allow m95_cpuset vendor_toolbox_exec:file { read open getattr execute execute_no_trans map };
+allow m95_cpuset vendor_file:dir { search read open getattr };
+allow m95_cpuset sysfs:file { read open getattr };
+allow m95_cpuset cgroup:dir { search read open };
+allow m95_cpuset cgroup:file { read write open getattr };
+allow m95_cpuset self:capability sys_nice;
+
+# m95_bdaddr: reads the Bluetooth address from NVRAM (m95-bdaddr.sh)
+type m95_bdaddr, domain;
+allow init m95_bdaddr:process transition;
+allow m95_bdaddr vendor_shell_exec:file { read open getattr execute entrypoint map };
+allow m95_bdaddr init:process sigchld;
+allow m95_bdaddr vendor_toolbox_exec:file { read open getattr execute execute_no_trans map };
+allow m95_bdaddr vendor_file:dir { search read open getattr };
+allow m95_bdaddr nvdata_file:dir search;
+allow m95_bdaddr nvdata_file:file { read open getattr };
+
+# hps, thermal trip table, CPU online mask and LMK minfree
+allow m95_cpuset proc_hps:dir search;
+allow m95_cpuset proc_hps:file { getattr open write };
+allow m95_cpuset proc_mtk_thermal:dir search;
+allow m95_cpuset proc_mtk_thermal:file rw_file_perms;
+allow m95_cpuset sysfs_devices_system_cpu:file rw_file_perms;
+allow m95_cpuset sysfs_lowmemorykiller:dir search;
+allow m95_cpuset sysfs_lowmemorykiller:file rw_file_perms;
+
+# Performance profile (m95-perfprofile.sh, persist.vendor.m95.perfprofile=1)
+get_prop(m95_cpuset, m95_perfprofile_prop)
+allow m95_cpuset vendor_file:file r_file_perms;
+allow m95_cpuset { m95_proc_ppm m95_proc_cpufreq m95_proc_perfmgr m95_proc_mtkcooler }:dir search;
+allow m95_cpuset { m95_proc_ppm m95_proc_cpufreq m95_proc_perfmgr m95_proc_mtkcooler }:file rw_file_perms;
+r_dir_file(m95_cpuset, sysfs_leds)
+
+# persist.vendor.m95.hps; the kernel check reads /proc/version.
+allow m95_cpuset proc_hps:file read;
+allow m95_cpuset proc_version:file r_file_perms;

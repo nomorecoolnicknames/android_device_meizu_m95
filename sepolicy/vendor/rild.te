@@ -1,0 +1,16 @@
+# mtkrild / mtkrildmd2 run in the base rild domain (rild_exec).
+allow rild ccci_device:chr_file rw_file_perms;
+allow rild sysfs_ccci:file r_file_perms;
+r_dir_file(rild, nvdata_file)
+allow rild nvdata_file:file rw_file_perms;
+get_prop(rild, mtk_md_prop)
+get_prop(rild, nvram_prop)
+allow rild pmsg_device:chr_file w_file_perms;
+
+# dac_override is not granted: no file needing it has been identified.
+
+# mtkrild reads the MAL LTE handover flag.
+get_prop(rild, m95_handover_prop)
+
+# sys_resource at rild start-up
+allow rild self:capability sys_resource;

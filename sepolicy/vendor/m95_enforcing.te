@@ -1,0 +1,290 @@
+# /data/md3: modem NVRAM and GPS working files, owned by ccci_fsd.
+type ccci_data_file, file_type, data_file_type, core_data_file_type;
+
+# /dev/block/mmcblk0p8 (nvcfg)
+type nvcfg_device, dev_type;
+
+# /dev/mtk-adc-cali: ADC calibration node written by nvram_daemon.
+type mtk_adc_cali_device, dev_type;
+
+# memtrack: debugfs is not a stable interface; the HAL works without it.
+dontaudit hal_memtrack_default debugfs:dir { search read open getattr };
+dontaudit hal_memtrack_default debugfs:file { read open getattr };
+
+# ccci_fsd: the modem loads its calibration from /data/md3.
+allow ccci_fsd ccci_data_file:dir { read write open search getattr add_name remove_name };
+allow ccci_fsd ccci_data_file:file { read write open getattr create unlink setattr };
+
+# init: by-name block device symlinks created in first stage.
+allow init {
+    lk_block_device
+    logo_block_device
+    mdimg_block_device
+    nvram_device
+    proinfo_block_device
+    protect_f_device
+    seccfg_block_device
+    userdata_block_device
+}:lnk_file relabelto;
+
+allow init tmpfs:lnk_file create;
+allow init sysfs:file setattr;
+allow init sysfs_ccci:file setattr;
+
+allow mnld sysfs:file { open read };
+allow viarild proc_cmdline:file { read open };
+allow wmt_loader mtk_wmt_proc:file setattr;
+allow vendor_init system_data_file:dir setattr;
+
+# webview_zygote <-> zygote datagram handshake, denied on stock as well.
+dontaudit webview_zygote zygote:unix_dgram_socket { read write };
+
+# mnld powers the GNSS chip through sysfs.
+allow mnld sysfs:file write;
+
+# emdlogger reads its config from /data/mdlog.
+allow emdlogger system_data_file:file { read open getattr };
+
+# gsm0710muxd sets up the modem PTYs.
+allow gsm0710muxd device:dir write;
+allow gsm0710muxd devpts:chr_file setattr;
+allow gsm0710muxd sysfs_ccci:dir search;
+allow gsm0710muxd self:capability chown;
+
+allow viarild self:capability setuid;
+allow viarild proc_cmdline:file getattr;
+
+# Camera HAL reads the board revision.
+allow hal_camera_default sysfs_dev_info:file { read open };
+
+# Audio HAL watches the headset switch.
+allow hal_audio_default sysfs_switch:dir search;
+allow hal_audio_default sysfs_switch:file { read open };
+allow hal_audio_default media_rw_data_file:dir search;
+
+allow nvram_daemon shell_exec:file { read open execute execute_no_trans };
+
+# thermal_manager uses /proc/mtktz.
+allow thermal_manager proc:file { read write open };
+
+allow fuelgauged kmsg_device:chr_file { write open };
+
+allow hal_drm_default vndbinder_device:chr_file { read write open ioctl };
+
+allow init dev_type:lnk_file relabelto;
+
+dontaudit rild self:capability dac_override;
+
+# e2fsck checks nvdata (mmcblk0p9) and nvcfg (mmcblk0p8).
+allow fsck nvdata_device:blk_file { read write open ioctl getattr };
+allow fsck nvcfg_device:blk_file { read write open ioctl getattr };
+
+allow init dev_type:lnk_file { relabelfrom relabelto };
+allow init block_device:lnk_file { relabelfrom relabelto };
+
+# init must not exec a shell without a domain transition.
+dontaudit init shell_exec:file execute_no_trans;
+allow nvram_daemon shell_exec:file getattr;
+allow nvram_daemon rootfs:dir read;
+
+allow hal_gnss_default vndbinder_device:chr_file { read write open ioctl };
+
+allow mtkmal self:capability setuid;
+allow mtkmal nvram_prop:file { read open getattr map };
+
+# Sensors HAL reads its gyro bias calibration.
+allow hal_sensors_default system_data_file:file { read open getattr };
+
+allow ccci_mdinit sysfs_dev_info:file { read open getattr };
+allow ccci_mdinit system_data_file:file { read open getattr };
+
+allow emdlogger system_data_file:fifo_file { read write open getattr };
+
+# mcd: netlink socket to the TEE driver.
+allow mcd self:netlink_socket { create bind read write setopt };
+
+# wmt_loader does not need dac_override: /dev/wmtdetect is root-owned.
+dontaudit wmt_loader self:capability dac_override;
+
+allow init { m95_cpuset m95_bdaddr }:process
+    { transition rlimitinh siginh };
+
+# The scripts live in /vendor/bin.
+allow m95_bdaddr vendor_file:file r_file_perms;
+
+allow hal_graphics_composer_default vndbinder_device:chr_file
+    { read write open ioctl };
+
+allow rild devpts:chr_file { read write open ioctl getattr };
+
+allow mtk_agpsd ccci_device:chr_file { read write open getattr };
+
+allow gsm0710muxd device:dir { add_name remove_name };
+allow gsm0710muxd sysfs_ccci:file { read open getattr };
+allow gsm0710muxd self:capability fowner;
+
+allow hal_fingerprint_default servicemanager:binder call;
+
+allow wmt_loader self:capability chown;
+
+allow fuelgauged self:netlink_socket { create bind read write };
+
+allow gsm0710muxd device:lnk_file { create unlink };
+
+allow nvram_daemon toolbox_exec:file getattr;
+allow nvram_daemon rootfs:dir open;
+
+allow mtk_agpsd ccci_device:chr_file ioctl;
+
+# Audio HAL reads the modem audio calibration.
+allow hal_audio_default sysfs_ccci:dir search;
+allow hal_audio_default sysfs_ccci:file { read open getattr };
+allow hal_audio_default nvram_prop:file { read open getattr map };
+
+allow ccci_fsd sysfs_ccci:dir search;
+
+allow servicemanager hal_fingerprint_default:dir search;
+allow servicemanager hal_fingerprint_default:file { read open getattr };
+
+# netd probes for kernel modules; everything is built in.
+dontaudit netd self:capability sys_module;
+
+allow nvram_daemon toolbox_exec:file { read open execute execute_no_trans };
+allow nvram_daemon rootfs:file { read open getattr };
+
+allow mnld nvram_prop:file { read open getattr map };
+
+allow servicemanager hal_fingerprint_default:process getattr;
+
+allow mtk_agpsd mtk_md_prop:file { read open getattr map };
+
+allow ccci_mdinit nvram_prop:file { read open getattr map };
+
+# thermal_manager owns its policy files under /data/.tp.
+allow thermal_manager self:capability { chown fowner };
+
+unix_socket_connect(pq, property, init)
+
+allow hal_graphics_composer_default vndservicemanager:binder { call transfer };
+allow vndservicemanager hal_graphics_composer_default:dir search;
+allow vndservicemanager hal_graphics_composer_default:file { read open getattr };
+allow vndservicemanager hal_graphics_composer_default:process getattr;
+
+# Composer uses the MTK command queue (/proc/mtk_cmdq).
+allow hal_graphics_composer_default proc_cmdq:file { read open getattr ioctl };
+
+# nvram_daemon owns nvdata (p9) and proinfo (p15).
+allow nvram_daemon nvdata_device:blk_file { read write open getattr ioctl };
+allow nvram_daemon proinfo_block_device:blk_file { read write open getattr ioctl };
+
+allow nvram_daemon mtk_adc_cali_device:chr_file { read write open getattr ioctl };
+
+allow mtk_agpsd nvcfg_file:dir { search getattr };
+
+# The camera HAL aborts if it cannot write lens shading dumps.
+allow hal_camera_default media_rw_data_file:dir { search write add_name };
+allow hal_camera_default media_rw_data_file:file { create write open getattr };
+
+allow hal_camera_default media_rw_data_file:dir getattr;
+
+# Sensors HAL gyro bias calibration file in /data (relabelled in file_contexts).
+allow hal_sensors_default mtk_sensor_data_file:file { read write open getattr create };
+allow hal_sensors_default system_data_file:dir search;
+unix_socket_connect(hal_sensors_default, property, init)
+
+# nosecure.akm.resetdoe (AKM compass reset flag).
+set_prop(hal_sensors_default, m95_sensor_prop)
+
+allow cameraserver proc_ged:file r_file_perms;
+
+set_prop(pq, m95_pq_prop)
+
+# nvram_daemon publishes the Wi-Fi 5 GHz capability flag.
+set_prop(nvram_daemon, m95_wlan_prop)
+
+set_prop(gsm0710muxd, ctl_mtk_radio_prop)
+
+set_prop(rild, mtk_md_prop)
+
+allow rild block_device:dir search;
+
+# pm.dexopt.* in vendor/build.prop duplicate the values in system/build.prop.
+dontaudit vendor_init exported_pm_prop:property_service set;
+dontaudit vendor_init exported_pm_prop:file { open read ioctl lock };
+
+allow mnld nvcfg_file:dir search;
+
+binder_call(hal_camera_default, pq)
+
+allow hal_camera_default system_server:unix_stream_socket write;
+
+# mtk_wmtd (kernel thread) path lookup.
+allow kernel storage_file:dir search;
+
+get_prop(hal_camera_default, m95_pq_prop)
+set_prop(hal_camera_default, m95_pq_prop)
+
+# 3A reads battery state for flash and frame rate limits.
+allow hal_camera_default sysfs_batteryinfo:dir search;
+allow hal_camera_default sysfs_batteryinfo:file r_file_perms;
+
+# Video decoder buffer bookkeeping.
+allow mediaserver proc_ged:file r_file_perms;
+
+# mediacodec is intentionally not allowed to find guiext_service: the GuiExt
+# buffer pool path deadlocks the decoder.
+
+allow surfaceflinger proc_cmdq:file r_file_perms;
+
+set_prop(hal_graphics_composer_default, m95_pq_prop)
+
+binder_call(mediacodec, hal_graphics_composer_default)
+
+get_prop(mediacodec, m95_pq_prop)
+
+get_prop(surfaceflinger, m95_pq_prop)
+
+# OMX video decoder configures the MDP colour path (persist.sys.pq.*, debug.pq.*).
+set_prop(mediacodec, m95_pq_prop)
+
+# MTK libraries in the camera provider open their own vndbinder ProcessState.
+vndbinder_use(hal_camera_default)
+
+# Every process checks the TARGET_LD_SHIM_LIBS targets with access() and
+# realpath(); the shims still match when denied.
+dontaudit domain {
+    hal_camera_default_exec
+    spm_loader_exec
+    volte_stack_exec
+    volte_ua_exec
+    volte_imcb_exec
+}:file { read getattr };
+
+get_prop(mtkmal, m95_volte_svc_prop)
+
+# vold FITRIM on the MTK protect_f/protect_s, nvdata and nvcfg partitions.
+dontaudit vold {
+    protect_f_data_file
+    protect_s_data_file
+    nvdata_file
+    nvcfg_file
+}:dir { read open ioctl };
+
+# init.m95.mem.rc disables exception-trace.
+allow vendor_init proc_m95_exception_trace:file w_file_perms;
+
+# The IMS service looks up "wfo" and handles a null result; the kernel has no
+# loadable modules.
+dontaudit radio default_android_service:service_manager find;
+dontaudit init kernel:system module_request;
+
+# MTK feature props read by the PQ/MDP libraries in the gralloc closure.
+get_prop({ appdomain surfaceflinger bootanim system_server }, m95_mtk_config_prop)
+
+# libmdfx.so (loaded by the IMS service) waits for service.nvram_init and
+# reads ril.mal.flag.
+get_prop(radio, nvram_prop)
+get_prop(radio, m95_mtk_ril_prop)
+
+# The Wi-Fi driver looks for an optional /data/misc/wifi/wifi.cfg.
+dontaudit kernel wifi_data_file:dir search;

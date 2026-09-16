@@ -1,0 +1,26 @@
+# volte_kicker: forwards the modem's IMS enable indication from rild-ims to
+# mtkmal's volte_imsm, so the VoLTE daemons get started. Runs as user radio,
+# which rild-ims requires of its clients.
+
+type volte_kicker, domain;
+type volte_kicker_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(volte_kicker)
+
+# Logging and /dev/null
+allow volte_kicker pmsg_device:chr_file w_file_perms;
+allow volte_kicker logdw_socket:sock_file write;
+allow volte_kicker logd:unix_dgram_socket sendto;
+allow volte_kicker null_device:chr_file rw_file_perms;
+
+# Sockets
+allow volte_kicker socket_device:dir search;
+allow volte_kicker self:unix_stream_socket create_socket_perms;
+
+# Client of /dev/socket/rild-ims (listener in rild)
+allow volte_kicker rild_ims_socket:sock_file write;
+allow volte_kicker rild:unix_stream_socket connectto;
+
+# Client of /dev/socket/volte_imsm (mtkmal)
+allow volte_kicker mtkmal_socket:sock_file write;
+allow volte_kicker mtkmal:unix_stream_socket connectto;
+

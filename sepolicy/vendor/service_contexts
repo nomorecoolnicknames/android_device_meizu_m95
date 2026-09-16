@@ -1,0 +1,7 @@
+# Framework binder services registered by MTK vendor daemons.
+NvRAMAgent                                u:object_r:nvram_agent_service:s0
+android.hardware.fingerprint.IGoodixFingerprintDaemon  u:object_r:goodixfingerprintd_service:s0
+PQ                                        u:object_r:pq_service:s0
+# GuiExt: with ro.vendor.binder.framework_domain=1 the composer registers it on
+# /dev/binder (the vndservice_contexts entry covers the other case).
+GuiExtService                             u:object_r:guiext_service:s0

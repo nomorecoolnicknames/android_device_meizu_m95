@@ -1,0 +1,57 @@
+# MTK thermal daemons (thermal, thermald, thermalloadalgod, thermal_manager;
+# init.m95.thermal.rc) and the ePDG daemon epdg_wod (vendor init.wod.rc).
+
+type thermal, domain;
+type thermal_exec, exec_type, vendor_file_type, file_type;
+type thermald, domain;
+type thermald_exec, exec_type, vendor_file_type, file_type;
+type thermalloadalgod, domain;
+type thermalloadalgod_exec, exec_type, vendor_file_type, file_type;
+type thermal_manager, domain;
+type thermal_manager_exec, exec_type, vendor_file_type, file_type;
+type epdg_wod, domain;
+type epdg_wod_exec, exec_type, vendor_file_type, file_type;
+
+init_daemon_domain(thermal)
+init_daemon_domain(thermald)
+init_daemon_domain(thermalloadalgod)
+init_daemon_domain(thermal_manager)
+init_daemon_domain(epdg_wod)
+
+# /data/.tp: persisted thermal policy selection
+type thermal_data_file, file_type, data_file_type, core_data_file_type;
+
+# Logging and /dev/null
+allow { thermal thermald thermalloadalgod thermal_manager epdg_wod } pmsg_device:chr_file w_file_perms;
+allow { thermal thermald thermalloadalgod thermal_manager epdg_wod } logdw_socket:sock_file write;
+allow { thermal thermald thermalloadalgod thermal_manager epdg_wod } logd:unix_dgram_socket sendto;
+allow { thermal thermald thermalloadalgod thermal_manager epdg_wod } null_device:chr_file rw_file_perms;
+
+# Kernel thermal interfaces: zone temperatures and cooling knobs
+allow { thermal thermald thermalloadalgod thermal_manager } proc_mtk_thermal:file rw_file_perms;
+allow { thermal thermald thermalloadalgod thermal_manager } proc_mtk_thermal:dir r_dir_perms;
+# /proc/mtkcooler: per-cooler conditions set by the thermal policies
+allow thermal_manager m95_proc_mtkcooler:dir search;
+allow thermal_manager m95_proc_mtkcooler:file { read write open getattr };
+allow { thermal thermald thermalloadalgod thermal_manager } sysfs:dir r_dir_perms;
+allow { thermal thermald thermalloadalgod thermal_manager } sysfs:file rw_file_perms;
+
+# Thermal policy files (/vendor/etc/.tp) and the persisted selection (/data/.tp)
+r_dir_file(thermal, vendor_file)
+r_dir_file(thermald, vendor_file)
+r_dir_file(thermal_manager, vendor_file)
+allow { thermal thermald thermal_manager } thermal_data_file:dir create_dir_perms;
+allow { thermal thermald thermal_manager } thermal_data_file:file create_file_perms;
+
+# Modem thermal zone through the rild-oem socket
+allow thermal rild_oem_socket:sock_file write;
+allow thermal socket_device:dir search;
+allow thermal rild:unix_stream_socket connectto;
+
+# thermalloadalgod kernel event feed
+allow thermalloadalgod self:netlink_socket create_socket_perms_no_ioctl;
+
+# epdg_wod working directory. dac_override is neverallowed and not needed:
+# the daemon is root and the directories are root-owned.
+allow epdg_wod epdg_wod_data_file:dir create_dir_perms;
+allow epdg_wod epdg_wod_data_file:file create_file_perms;

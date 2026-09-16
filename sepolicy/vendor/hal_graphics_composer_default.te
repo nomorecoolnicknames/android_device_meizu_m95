@@ -1,0 +1,5 @@
+# Display hotplug / vsync uevent listener (UEventThreadHWC)
+allow hal_graphics_composer_default self:netlink_kobject_uevent_socket { create bind read setopt };
+
+# The HWC reads the MTK boot mode.
+allow hal_graphics_composer_default sysfs:file r_file_perms;

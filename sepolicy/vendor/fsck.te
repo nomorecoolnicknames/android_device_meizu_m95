@@ -1,0 +1,6 @@
+# e2fsck checks the MTK protect_f/protect_s partitions at boot.
+allow fsck protect_f_device:blk_file rw_file_perms;
+allow fsck protect_s_device:blk_file rw_file_perms;
+
+# e2fsck probes the battery sysfs directory at startup.
+allow fsck sysfs_batteryinfo:dir search;

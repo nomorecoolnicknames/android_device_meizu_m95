@@ -1,0 +1,3 @@
+# Consumer IR HAL (consumerir.mt6797.so) opens /dev/irtx, present with
+# CONFIG_MTK_IRTX_SUPPORT=y.
+allow hal_ir_default irtx_device:chr_file rw_file_perms;

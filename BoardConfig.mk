@@ -71,6 +71,9 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET) \
     --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
     --header_version $(BOARD_BOOT_HEADER_VERSION)
 
+# SELinux is permissive on the kernel command line.
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+
 # Turn off costly kernel debug features at boot (the prebuilt is built from a
 # debug defconfig, and LK prepends slub_debug=O). Diagnostics only.
 BOARD_KERNEL_CMDLINE += slub_debug=- lockdep.prove_locking=0 dma_debug=off trace_buf_size=1M
@@ -125,6 +128,9 @@ BOARD_VNDK_VERSION := current
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
+
+# SELinux
+BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 
 # Graphics
 # The MTK vendor usage bit 26 must be accepted by the gralloc0 adapter.

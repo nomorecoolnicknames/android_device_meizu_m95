@@ -1,0 +1,2 @@
+# memtrack.mt6797.so reads Mali and ION statistics from debugfs. Not allowed
+# (debugfs is neverallowed for HALs); the HAL then reports no graphics memory.

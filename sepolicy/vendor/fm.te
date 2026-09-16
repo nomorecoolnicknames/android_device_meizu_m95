@@ -1,0 +1,3 @@
+# FM radio (MT6631 receiver in the CONSYS combo chip). The FM app runs in
+# platform_app and drives /dev/fm with ioctls.
+allow platform_app fm_device:chr_file rw_file_perms;

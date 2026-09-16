@@ -1,0 +1,27 @@
+# Trustonic TEE: mcDriverDaemon and its clients.
+
+type mcd, domain;
+init_daemon_domain(mcd)
+
+allow mcd mobicore_device:chr_file rw_file_perms;
+allow mcd mobicore_user_device:chr_file rw_file_perms;
+allow mcd mcd_data_file:dir create_dir_perms;
+allow mcd mcd_data_file:file create_file_perms;
+# Trustlets in /vendor/app/mcRegistry
+r_dir_file(mcd, vendor_file)
+
+# Keymaster and gatekeeper HALs reach the TEE via /dev/mobicore-user and the
+# mcd socket.
+allow hal_keymaster_default mobicore_user_device:chr_file rw_file_perms;
+allow hal_keymaster_default mcd:unix_stream_socket connectto;
+r_dir_file(hal_keymaster_default, mcd_data_file)
+
+allow hal_gatekeeper_default mobicore_user_device:chr_file rw_file_perms;
+allow hal_gatekeeper_default mcd:unix_stream_socket connectto;
+r_dir_file(hal_gatekeeper_default, mcd_data_file)
+
+# The fingerprint HAL loads fingerprint.default.so, which links libMcClient;
+# the sensor and TEE work happens in goodixfingerprintd (fingerprintd.te).
+allow hal_fingerprint fingerprint_device:chr_file rw_file_perms;
+allow hal_fingerprint mobicore_user_device:chr_file rw_file_perms;
+allow hal_fingerprint mcd:unix_stream_socket connectto;

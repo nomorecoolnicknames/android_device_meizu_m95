@@ -1,0 +1,4 @@
+# Power HAL (power-fleet/): raises the PPM PERF_SERV perf_idx on touch and app
+# launch (/proc/ppm).
+allow hal_power_default m95_proc_ppm:dir search;
+allow hal_power_default m95_proc_ppm:file rw_file_perms;

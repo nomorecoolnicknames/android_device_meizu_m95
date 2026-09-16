@@ -1,0 +1,7 @@
+# Thermal HAL (thermal/): zone type/temp under /sys/class/thermal (generic
+# sysfs on this kernel, sysfs_thermal if labelled) and /proc/stat.
+r_dir_file(hal_thermal_default, sysfs_thermal)
+allow hal_thermal_default sysfs:dir r_dir_perms;
+allow hal_thermal_default sysfs:file r_file_perms;
+allow hal_thermal_default sysfs:lnk_file read;
+allow hal_thermal_default proc_stat:file r_file_perms;

@@ -1,0 +1,5 @@
+# The m95_cpuset patrol reads /dev/cpuset files through toybox cat.
+allow toolbox cgroup:file { read getattr };
+
+# Command substitution pipes are created by init.
+allow toolbox init:fifo_file write;

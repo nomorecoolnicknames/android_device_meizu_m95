@@ -1,0 +1,11 @@
+# Socket ioctl extended permissions.
+# Commands covered by the platform unpriv_*_ioctls macros are not repeated here.
+
+# wpa_supplicant queries interface flags, MAC address and index.
+allowxperm hal_wifi_supplicant_default self:udp_socket ioctl { 0x8913 0x8927 0x8933 };
+allowxperm hal_wifi_supplicant_default self:packet_socket ioctl { 0x8927 0x8933 };
+
+# SIOCGIFHWADDR (0x8927) is not in the platform set; netd reads interface
+# hardware addresses through ifc_get_hwaddr().
+allowxperm netd self:udp_socket ioctl { 0x8927 };
+

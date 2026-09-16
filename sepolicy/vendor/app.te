@@ -1,0 +1,3 @@
+# GPU apps use the MTK GED node from their RenderThread; the ioctl commands
+# are granted in graphics.te.
+allow { appdomain -isolated_app } proc_ged:file { getattr open read ioctl };

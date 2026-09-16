@@ -1,0 +1,84 @@
+# Android 13 enforces property ownership: every type is vendor_internal_prop
+# (vendor domains only) or vendor_restricted_prop (also read by core domains).
+# vendor_init has no access to vendor properties by default; see vendor_init.te.
+
+# WMT combo chip state (persist.mtk.wcn.*, service.wcn.*)
+vendor_restricted_prop(wmt_prop)
+
+# GPS daemon
+vendor_internal_prop(mnld_prop)
+
+# Modem state
+vendor_restricted_prop(mtk_md_prop)
+
+# ctl.* for the MTK radio services (ccci, ril, muxreport, mdlogger, gsm0710muxd)
+vendor_internal_prop(ctl_mtk_radio_prop)
+
+# nvram_daemon readiness (service.nvram_init)
+vendor_restricted_prop(nvram_prop)
+
+# MTK log daemons (persist.mtklog.*, debug.mdlogger.*)
+vendor_internal_prop(mtklog_prop)
+
+# AKM compass control flags (nosecure.akm.*), set by the sensors HAL
+vendor_internal_prop(m95_sensor_prop)
+
+# Picture quality tuning (persist.sys.pq.*, debug.pq.*)
+vendor_restricted_prop(m95_pq_prop)
+
+# Wi-Fi 5 GHz capability flag (ro.wlan.mtk.*)
+vendor_restricted_prop(m95_wlan_prop)
+
+# ctl.start/ctl.stop for the VoLTE daemons, set by mtkmal
+vendor_internal_prop(ctl_volte_prop)
+
+# MAL LTE handover flag (net.handover.thlte)
+vendor_internal_prop(m95_handover_prop)
+
+# persist.forge.* IMS service toggles, read by the IMS service (radio) and init
+vendor_restricted_prop(m95_forge_prop)
+
+# init.svc.volte_* readiness, polled by the IMS service
+vendor_restricted_prop(m95_volte_svc_prop)
+
+# MTK telephony/IMS properties (persist.vendor.ims*, persist.vendor.mtk.*)
+# read by the IMS service in the radio domain.
+vendor_restricted_prop(m95_ims_vendor_prop)
+
+# MTK properties that would otherwise land on platform types vendor domains
+# may not access on Android 13.
+
+# MTK feature switches (ro.mtk_*, persist.mtk*, mtk.eccci.*), also read by
+# core processes through the SP-HAL closure.
+vendor_public_prop(m95_mtk_config_prop)
+
+# MTK RIL/MAL/MUX state shared between vendor daemons (ril.*, persist.radio.mtk_*)
+vendor_restricted_prop(m95_mtk_ril_prop)
+
+# init.svc.ril-proxy and init.svc.goodixfpd, polled by vendor code
+vendor_restricted_prop(m95_vendor_svc_prop)
+
+# sys.usb.vid (init.mt6797.usb.rc)
+vendor_internal_prop(m95_usb_prop)
+
+# debug.hwc.* tunables published by the HWC blob
+vendor_internal_prop(m95_hwc_debug_prop)
+
+# ro.vendor.vintf.legacy_kernel, read by system_server
+vendor_restricted_prop(m95_exported_vendor_prop)
+
+# MTK audio HAL state and switches (af.*, persist.af.*)
+vendor_internal_prop(m95_audio_hal_prop)
+
+# VoLTE stack bookkeeping (net.ims.*, service.ims.icsi.*)
+vendor_internal_prop(m95_volte_prop)
+
+# Camera provider switches (persist.camera.*)
+vendor_restricted_prop(m95_camera_prop)
+
+# Performance profile switches (persist.vendor.m95.perfprofile*)
+vendor_internal_prop(m95_perfprofile_prop)
+
+# Power trap switch (persist.vendor.m95.powertrap)
+vendor_internal_prop(m95_powertrap_prop)
+

@@ -1,0 +1,14 @@
+# MTK OMX codecs drive the hardware codec via /dev/Vcodec and M4U/SMI.
+
+allow mediacodec video_device:chr_file rw_file_perms;
+allow mediacodec mtk_m4u_proc:file rw_file_perms;
+allow mediacodec MTK_SMI_device:chr_file rw_file_perms;
+allow mediacodec gpu_device:chr_file rw_file_perms;
+allow mediacodec sysfs:file r_file_perms;
+# /dev/devmap: devinfo (efuse) map, read-only
+allow mediacodec devmap_device:chr_file r_file_perms;
+
+# GED and CMDQ proc nodes, dev_info sysfs
+allow mediacodec proc_ged:file r_file_perms;
+allow mediacodec proc_cmdq:file r_file_perms;
+allow mediacodec sysfs_dev_info:file r_file_perms;

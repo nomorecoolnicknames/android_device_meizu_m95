@@ -1,0 +1,14 @@
+# MTK battery userspace helpers. The fuel gauge is a bq27532 (sysfs labels in
+# genfs_contexts).
+
+type fuelgauged, domain;
+init_daemon_domain(fuelgauged)
+r_dir_file(fuelgauged, system_file)
+r_dir_file(fuelgauged, sysfs_type)
+allow fuelgauged sysfs_batteryinfo:file rw_file_perms;
+
+type batterywarning, domain;
+init_daemon_domain(batterywarning)
+r_dir_file(batterywarning, system_file)
+r_dir_file(batterywarning, sysfs_type)
+allow batterywarning sysfs_batteryinfo:file r_file_perms;

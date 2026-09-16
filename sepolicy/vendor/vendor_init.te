@@ -1,0 +1,82 @@
+# vendor_init has no access to vendor properties by default, so every type it
+# sets or reads is listed here.
+
+# Properties
+# vendor/build.prop is loaded before SELinux logging is set up: a refused
+# property is dropped without an avc.
+set_prop(vendor_init, {
+  m95_camera_prop
+  m95_mtk_config_prop
+  m95_mtk_ril_prop
+  m95_pq_prop
+  m95_ims_vendor_prop
+  wmt_prop
+  m95_exported_vendor_prop
+})
+
+# persist.vendor.m95.hps default from vendor.prop
+set_prop(vendor_init, m95_perfprofile_prop)
+
+# setprop sys.usb.vid (init.mt6797.usb.rc)
+set_prop(vendor_init, m95_usb_prop)
+
+# Property triggers: init drops an action whose trigger vendor_init cannot read.
+get_prop(vendor_init, {
+  nvram_prop
+  m95_forge_prop
+  m95_vendor_svc_prop
+})
+
+# Files
+# MTK fixed /data paths created at post-fs-data (core_data_file_type).
+allow vendor_init {
+  ccci_data_file
+  ccci_cfg_file
+  epdg_wod_data_file
+  gf_data_file
+  mcd_data_file
+  mnld_data_file
+  mtk_sensor_data_file
+  nvdata_file
+  thermal_data_file
+}:dir { create search getattr open read setattr write add_name relabelfrom relabelto };
+allow vendor_init { system_data_root_file system_data_file }:dir { write add_name };
+
+# fstab copy in /data/nvram, parsed by libnvram
+allow vendor_init nvdata_file:file { create getattr open read write setattr };
+
+# restorecon of the MTK data paths
+allow vendor_init { ccci_data_file ccci_cfg_file mcd_data_file mtk_sensor_data_file }:file { getattr relabelfrom relabelto };
+
+# restorecon of the by-name block device symlinks
+allow vendor_init block_device:lnk_file relabelfrom;
+allow vendor_init {
+  boot_block_device
+  cache_block_device
+  expdb_block_device
+  frp_block_device
+  lk_block_device
+  logo_block_device
+  mdimg_block_device
+  misc_block_device
+  nvcfg_device
+  nvdata_device
+  nvram_device
+  proinfo_block_device
+  protect_f_device
+  protect_s_device
+  recovery_block_device
+  seccfg_block_device
+  system_block_device
+  userdata_block_device
+}:lnk_file relabelto;
+
+# init.m95.mem.rc: zram swappiness and GED GPU frequency floor
+allow vendor_init m95_proc_swappiness:file w_file_perms;
+allow vendor_init m95_debugfs_ged_boost:file w_file_perms;
+
+# dmesg_restrict
+allow vendor_init proc_security:file w_file_perms;
+
+# Firmware search path (/vendor/firmware)
+allow vendor_init sysfs_fw_class_path:file w_file_perms;

@@ -1,0 +1,271 @@
+# Block devices
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/boot      u:object_r:boot_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/recovery  u:object_r:recovery_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/system    u:object_r:system_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/cache     u:object_r:cache_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/userdata  u:object_r:userdata_block_device:s0
+# No misc partition: para carries the MTK BCB and is mounted as /misc.
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/para      u:object_r:misc_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/frp       u:object_r:frp_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/nvram     u:object_r:nvram_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/nvdata    u:object_r:nvdata_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/nvcfg    u:object_r:nvcfg_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/protect1  u:object_r:protect_f_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/protect2  u:object_r:protect_s_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/expdb     u:object_r:expdb_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/logo      u:object_r:logo_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/seccfg    u:object_r:seccfg_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/proinfo   u:object_r:proinfo_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/lk        u:object_r:lk_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/lk2       u:object_r:lk_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/md1img    u:object_r:mdimg_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/md1dsp    u:object_r:mdimg_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/md1arm7   u:object_r:mdimg_block_device:s0
+/dev/block/platform/mtk-msdc\.0/11230000\.msdc0/by-name/md3img    u:object_r:mdimg_block_device:s0
+
+# Connectivity
+/dev/stpwmt               u:object_r:stpwmt_device:s0
+/dev/wmtdetect            u:object_r:wmtdetect_device:s0
+/dev/wmtWifi              u:object_r:wmtWifi_device:s0
+/dev/stpbt                u:object_r:stpbt_device:s0
+/dev/stpgps               u:object_r:stpgps_device:s0
+/dev/gps                  u:object_r:stpgps_device:s0
+/dev/stpant               u:object_r:stpwmt_device:s0
+/dev/btif                 u:object_r:stpwmt_device:s0
+/dev/fm                   u:object_r:fm_device:s0
+
+# Modem
+/dev/ccci.*               u:object_r:ccci_device:s0
+/dev/eemcs.*              u:object_r:ccci_device:s0
+/dev/emd.*                u:object_r:ccci_device:s0
+/dev/ttyC[0-9]*           u:object_r:ccci_device:s0
+# CCCI audio channels
+/dev/ccci_pcm_rx          u:object_r:audio_device:s0
+/dev/ccci_pcm_tx          u:object_r:audio_device:s0
+/dev/ccci_aud             u:object_r:audio_device:s0
+/dev/ccci2_aud            u:object_r:audio_device:s0
+/dev/ccci3_aud            u:object_r:audio_device:s0
+# UART
+/dev/ttyMT[0-9]*          u:object_r:serial_device:s0
+
+# Graphics
+/dev/fb[0-9]*             u:object_r:graphics_device:s0
+/dev/mtk_disp.*           u:object_r:graphics_device:s0
+/dev/mtkfb_vsync          u:object_r:graphics_device:s0
+/dev/mtk_cmdq             u:object_r:graphics_device:s0
+/dev/sw_sync              u:object_r:sw_sync_device:s0
+/dev/mali                 u:object_r:gpu_device:s0
+/dev/mali[0-9]*           u:object_r:gpu_device:s0
+# GED (GPU extension device)
+/dev/ged                  u:object_r:gpu_device:s0
+/dev/MTK_SMI              u:object_r:MTK_SMI_device:s0
+
+# Camera / media
+/dev/Vcodec               u:object_r:video_device:s0
+/dev/camera-isp           u:object_r:camera_isp_device:s0
+/dev/camera-sysram        u:object_r:camera_device:s0
+/dev/camera-fdvt          u:object_r:camera_device:s0
+/dev/camera-pipemgr       u:object_r:camera_device:s0
+/dev/kd_camera_hw         u:object_r:camera_device:s0
+/dev/kd_camera_flashlight u:object_r:camera_device:s0
+/dev/kd_camera_hw_bus2    u:object_r:camera_device:s0
+/dev/CAM_CAL_DRV[0-9]*    u:object_r:cam_cal_device:s0
+/dev/camera-dpe           u:object_r:camera_device:s0
+# Lens actuators
+/dev/MAINAF               u:object_r:camera_device:s0
+/dev/SUBAF                u:object_r:camera_device:s0
+# devinfo (efuse) map, read by the camera and media HALs.
+/dev/devmap               u:object_r:devmap_device:s0
+
+# Sensors
+/dev/hwmsensor            u:object_r:hwmsensor_device:s0
+/dev/m_.*_misc            u:object_r:hwmsensor_device:s0
+
+# Fingerprint / TEE
+/dev/goodix_fp            u:object_r:fingerprint_device:s0
+/dev/goodix_fp_spi        u:object_r:fingerprint_device:s0
+/dev/mobicore             u:object_r:mobicore_device:s0
+/dev/mobicore-user        u:object_r:mobicore_user_device:s0
+
+# Misc
+/dev/otp                  u:object_r:otp_device:s0
+/dev/mtgpio               u:object_r:mtgpio_device:s0
+/dev/irtx                 u:object_r:irtx_device:s0
+/dev/touch                u:object_r:touch_device:s0
+/dev/hotknot              u:object_r:hotknot_device:s0
+/dev/RT_Monitor           u:object_r:hang_detect_device:s0
+/dev/kick_powerkey        u:object_r:hang_detect_device:s0
+
+# Sysfs
+/sys/bus/platform/drivers/dev_info/dev_info    u:object_r:sysfs_dev_info:s0
+
+# NV / protected partitions
+/nvdata(/.*)?             u:object_r:nvdata_file:s0
+/nvcfg(/.*)?              u:object_r:nvcfg_file:s0
+/protect_f(/.*)?          u:object_r:protect_f_data_file:s0
+/protect_s(/.*)?          u:object_r:protect_s_data_file:s0
+/data/nvram(/.*)?         u:object_r:nvdata_file:s0
+
+# Data directories
+# GPS / AGPS
+/data/misc/gps(/.*)?      u:object_r:mnld_data_file:s0
+/data/gps_mnl(/.*)?       u:object_r:mnld_data_file:s0
+/data/agps_supl(/.*)?     u:object_r:mnld_data_file:s0
+/data/mpe_mnl(/.*)?       u:object_r:mnld_data_file:s0
+# Sensor calibration
+/data/misc/sensor(/.*)?   u:object_r:mtk_sensor_data_file:s0
+# Trustonic registry
+/data/app/mcRegistry(/.*)?  u:object_r:mcd_data_file:s0
+/data/mcRegistry(/.*)?      u:object_r:mcd_data_file:s0
+# Goodix fingerprint data
+/data/gf_data(/.*)?       u:object_r:gf_data_file:s0
+
+# HALs
+/(system/)?vendor/bin/hw/android\.hardware\.audio@2\.0-service\.m95  u:object_r:hal_audio_default_exec:s0
+
+/(system/)?vendor/bin/hw/android\.hardware\.biometrics\.fingerprint@2\.0-service(\.m95)?  u:object_r:hal_fingerprint_default_exec:s0
+
+# Fingerprint daemon
+/system/bin/goodixfingerprintd  u:object_r:fingerprintd_exec:s0
+/(vendor|system/vendor)/bin/goodixfingerprintd  u:object_r:goodixfpd_exec:s0
+
+# Vendor executables
+/(system/)?vendor/bin/nvram_daemon        u:object_r:nvram_daemon_exec:s0
+# Picture quality daemon
+/(system/)?vendor/bin/pq                  u:object_r:pq_exec:s0
+/(system/)?vendor/bin/nvram_agent_binder  u:object_r:nvram_agent_binder_exec:s0
+/(system/)?vendor/bin/wmt_loader          u:object_r:wmt_loader_exec:s0
+/(system/)?vendor/bin/wmt_launcher        u:object_r:wmt_launcher_exec:s0
+/(system/)?vendor/bin/wmt_concurrency     u:object_r:wmt_concurrency_exec:s0
+/(system/)?vendor/bin/mnld                u:object_r:mnld_exec:s0
+/(system/)?vendor/bin/mtk_agpsd           u:object_r:mtk_agpsd_exec:s0
+/(system/)?vendor/bin/mcDriverDaemon      u:object_r:mcd_exec:s0
+/(system/)?vendor/bin/fuelgauged          u:object_r:fuelgauged_exec:s0
+/(system/)?vendor/bin/batterywarning      u:object_r:batterywarning_exec:s0
+/(system/)?vendor/bin/ccci_fsd            u:object_r:ccci_fsd_exec:s0
+/(system/)?vendor/bin/ccci_mdinit         u:object_r:ccci_mdinit_exec:s0
+/(system/)?vendor/bin/emdlogger[0-9]+     u:object_r:emdlogger_exec:s0
+/(system/)?vendor/bin/flashlessd          u:object_r:flashlessd_exec:s0
+/(system/)?vendor/bin/gsm0710muxd         u:object_r:gsm0710muxd_exec:s0
+/(system/)?vendor/bin/gsm0710muxdmd2      u:object_r:gsm0710muxd_exec:s0
+/(system/)?vendor/bin/mdlogger            u:object_r:mdlogger_exec:s0
+# MTK rild variants run in the rild domain.
+/(system/)?vendor/bin/mtkrild             u:object_r:rild_exec:s0
+/(system/)?vendor/bin/mtkrildmd2          u:object_r:rild_exec:s0
+/(system/)?vendor/bin/rilproxy            u:object_r:rilproxy_exec:s0
+/(system/)?vendor/bin/statusd             u:object_r:statusd_exec:s0
+/(system/)?vendor/bin/terservice          u:object_r:terservice_exec:s0
+/(system/)?vendor/bin/viarild             u:object_r:viarild_exec:s0
+/data/misc/akmd_set\.txt    u:object_r:sensor_calib_file:s0
+
+# Sockets
+# mtkrild OEM control socket, used by the thermal daemon.
+/dev/socket/rild-oem        u:object_r:rild_oem_socket:s0
+
+/dev/socket/rild-ims        u:object_r:rild_ims_socket:s0
+/dev/socket/rild-mal        u:object_r:rild_mal_socket:s0
+/dev/socket/wod_action      u:object_r:epdg_wod_socket:s0
+/dev/socket/wod_sim         u:object_r:epdg_wod_socket:s0
+/dev/socket/wod_ipsec       u:object_r:epdg_wod_socket:s0
+/data/ipsec(/.*)?           u:object_r:epdg_wod_data_file:s0
+/(system/)?vendor/bin/volte_kicker    u:object_r:volte_kicker_exec:s0
+/(vendor|system/vendor)/bin/mtkmal    u:object_r:mtkmal_exec:s0
+
+# Thermal / ePDG
+
+/(system/)?vendor/bin/thermal             u:object_r:thermal_exec:s0
+/(system/)?vendor/bin/thermald            u:object_r:thermald_exec:s0
+/(system/)?vendor/bin/thermalloadalgod    u:object_r:thermalloadalgod_exec:s0
+/(system/)?vendor/bin/thermal_manager     u:object_r:thermal_manager_exec:s0
+/(system/)?vendor/bin/epdg_wod            u:object_r:epdg_wod_exec:s0
+
+# Thermal policy selection
+/data/\.tp(/.*)?            u:object_r:thermal_data_file:s0
+
+# Trustonic registry used by mcDriverDaemon
+/data/misc/mcRegistry(/.*)?  u:object_r:mcd_data_file:s0
+
+# Modem filesystem daemon working tree
+/data/md3(/.*)?    u:object_r:ccci_data_file:s0
+
+# ADC calibration node
+/dev/mtk-adc-cali    u:object_r:mtk_adc_cali_device:s0
+/data/iNemoEngine_gbias\.dat    u:object_r:mtk_sensor_data_file:s0
+
+# mtkmal sockets
+/dev/socket/mal-mfi              u:object_r:mtkmal_socket:s0
+/dev/socket/mal-mfi-dongle       u:object_r:mtkmal_socket:s0
+/dev/socket/volte_imsm           u:object_r:mtkmal_socket:s0
+/dev/socket/volte_imsm_dongle    u:object_r:mtkmal_socket:s0
+
+# VoLTE daemons
+/(vendor|system/vendor)/bin/volte_ua      u:object_r:volte_ua_exec:s0
+/(vendor|system/vendor)/bin/volte_stack   u:object_r:volte_stack_exec:s0
+/(vendor|system/vendor)/bin/volte_imcb    u:object_r:volte_imcb_exec:s0
+
+# VoLTE daemon sockets
+/dev/socket/volte_stack     u:object_r:volte_stack_socket:s0
+/dev/socket/volte_ua        u:object_r:volte_ua_socket:s0
+/dev/socket/volte_imsa1     u:object_r:volte_imcb_socket:s0
+/dev/socket/volte_imsa2     u:object_r:volte_imcb_socket:s0
+/dev/socket/volte_imsvt1    u:object_r:volte_imcb_socket:s0
+/dev/socket/volte_imsvt2    u:object_r:volte_imcb_socket:s0
+/dev/socket/volte_ut        u:object_r:volte_imcb_socket:s0
+
+# Same-process HALs: the graphics stack and its DT_NEEDED closure on /vendor,
+# loaded into zygote, surfaceflinger and other core domains.
+/(vendor|system/vendor)/lib(64)?/hw/gralloc\..*\.so     u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libged\.so             u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libgpu_aux\.so         u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libgralloc_extra\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libion_mtk\.so         u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libm95shim_region\.so  u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libm95shim_utils\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libm95probe\.so        u:object_r:same_process_hal_file:s0
+
+/(vendor|system/vendor)/lib(64)?/libdpframework\.so      u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libbwc\.so              u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libm4u\.so              u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libmtk_drvb\.so         u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libpq_prot\.so          u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libpqservice\.so        u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libvcodec_utility\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libvcodecdrv\.so        u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libvcodec_oal\.so       u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libmp4enc_sa\.ca7\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libvc1dec_sa\.ca7\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libvp8dec_sa\.ca7\.so   u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libstdc\+\+\.so          u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libnetutils\.so         u:object_r:same_process_hal_file:s0
+
+# Gatekeeper (software implementation)
+/(vendor|system/vendor)/bin/hw/android\.hardware\.gatekeeper@1\.0-service\.software  u:object_r:hal_gatekeeper_default_exec:s0
+
+# DRM (HIDL clearkey)
+/(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.4-service\.clearkey  u:object_r:hal_drm_default_exec:s0
+
+# zram: init and toolbox have rights on swap_block_device, not ram_device.
+/dev/block/zram0        u:object_r:swap_block_device:s0
+
+# Modem config store
+/data/ccci_cfg(/.*)?    u:object_r:ccci_cfg_file:s0
+
+# SPM firmware loader
+/dev/spm                              u:object_r:spm_device:s0
+/(system/)?vendor/bin/spm_loader      u:object_r:spm_loader_exec:s0
+
+# Power trap output
+/data/vendor/m95-powertrap(/.*)?      u:object_r:m95_powertrap_data_file:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.thermal@2\.0-service\.m95  u:object_r:hal_thermal_default_exec:s0
+
+# PQ customization libraries, loaded through libpq_prot/libdpframework.
+/(vendor|system/vendor)/lib(64)?/libpq_cust_base\.so      u:object_r:same_process_hal_file:s0
+/(vendor|system/vendor)/lib(64)?/libpq_cust\.so           u:object_r:same_process_hal_file:s0
+# Vendor public library closure of libwfo_jni (IMS service).
+/(vendor|system/vendor)/lib(64)?/libwfo_jni\.so           u:object_r:vendor_public_lib_file:s0
+/(vendor|system/vendor)/lib(64)?/libmal\.so               u:object_r:vendor_public_lib_file:s0
+/(vendor|system/vendor)/lib(64)?/libmdfx\.so              u:object_r:vendor_public_lib_file:s0
+/(vendor|system/vendor)/lib(64)?/hw/libnativehelper\.so   u:object_r:vendor_public_lib_file:s0
+
+# Power HAL
+/(vendor|system/vendor)/bin/hw/android\.hardware\.power-service\.meizu  u:object_r:hal_power_default_exec:s0

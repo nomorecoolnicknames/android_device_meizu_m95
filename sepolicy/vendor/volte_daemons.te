@@ -1,0 +1,58 @@
+# VoLTE AP stack daemons: volte_ua (SIP user agent), volte_stack (SIP
+# transactions/timers) and volte_imcb (IMS control block). They are started
+# and stopped by mtkmal (init.m95.volte.rc).
+
+type volte_ua, domain;
+type volte_ua_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(volte_ua)
+
+type volte_stack, domain;
+type volte_stack_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(volte_stack)
+
+type volte_imcb, domain;
+type volte_imcb_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(volte_imcb)
+
+# Logging and /dev/null
+allow { volte_ua volte_stack volte_imcb } pmsg_device:chr_file w_file_perms;
+allow { volte_ua volte_stack volte_imcb } logdw_socket:sock_file write;
+allow { volte_ua volte_stack volte_imcb } logd:unix_dgram_socket sendto;
+allow { volte_ua volte_stack volte_imcb } null_device:chr_file rw_file_perms;
+
+# Sockets created by init (init.m95.volte.rc)
+allow { volte_ua volte_stack volte_imcb } socket_device:dir search;
+allow { volte_ua volte_stack volte_imcb } self:unix_stream_socket create_stream_socket_perms;
+allow { volte_ua volte_stack volte_imcb } self:unix_dgram_socket create_socket_perms;
+
+# Socket bus: imcb connects to volte_ua, ua and stack to volte_stack.
+allow volte_ua volte_stack_socket:sock_file write;
+allow volte_ua volte_stack:unix_stream_socket connectto;
+allow volte_imcb volte_ua_socket:sock_file write;
+allow volte_imcb volte_ua:unix_stream_socket connectto;
+allow volte_stack volte_stack_socket:sock_file write;
+allow volte_stack self:unix_stream_socket connectto;
+
+# Privilege drop at startup
+allow volte_stack self:capability { setuid setgid };
+allow volte_ua self:capability setgid;
+
+# IPsec SAs for IMS signalling over netlink xfrm
+allow volte_stack self:capability net_admin;
+allow volte_stack self:netlink_xfrm_socket { create bind read write nlmsg_read };
+
+# volte_imcb looks up the ccci nodes in sysfs.
+allow volte_imcb sysfs_ccci:dir search;
+
+# mtkmal is a client of volte_imcb.
+allow mtkmal volte_imcb_socket:sock_file write;
+
+allow mtkmal volte_imcb:unix_stream_socket connectto;
+allow volte_imcb sysfs_ccci:file r_file_perms;
+
+# IMS control channel /dev/ccci_imsc
+allow volte_imcb ccci_device:chr_file rw_file_perms;
+
+# SIP signalling and RTP media over the IMS bearer.
+net_domain(volte_stack)
+net_domain(volte_ua)

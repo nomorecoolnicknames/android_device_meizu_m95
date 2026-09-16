@@ -1,0 +1,46 @@
+# MTK Modem Abstraction Layer daemon (/vendor/bin/mtkmal), started from the
+# vendor init.mal.rc; the transition comes from the executable's label.
+type mtkmal, domain;
+type mtkmal_exec, exec_type, vendor_file_type, file_type;
+
+init_daemon_domain(mtkmal)
+
+# Logging (logd_client expanded)
+allow mtkmal pmsg_device:chr_file w_file_perms;
+allow mtkmal logdw_socket:sock_file write;
+allow mtkmal logd:unix_dgram_socket sendto;
+
+allow mtkmal null_device:chr_file rw_file_perms;
+
+# Sockets: rild-mal, rild-mal-at, mal-mfi, volte_imsm
+allow mtkmal socket_device:dir search;
+allow mtkmal self:unix_stream_socket create_stream_socket_perms;
+allow mtkmal self:unix_dgram_socket create_socket_perms;
+
+# mtkmal dlopen()s every libmal_*/libmd_* entity in /vendor/lib.
+allow mtkmal vendor_file:dir r_dir_perms;
+allow mtkmal vendor_file:file { read open getattr execute map };
+
+# The entities connect back to their own service's sockets.
+allow mtkmal mtkmal_socket:sock_file write;
+allow mtkmal self:unix_stream_socket connectto;
+
+# mtkmal starts and stops the VoLTE daemons.
+set_prop(mtkmal, ctl_volte_prop)
+
+set_prop(mtkmal, m95_handover_prop)
+
+# Alarm timers that fire from suspend
+allow mtkmal self:capability2 wake_alarm;
+
+# rild is a client of the MAL bus.
+allow rild mtkmal_socket:sock_file write;
+allow rild mtkmal:unix_stream_socket connectto;
+
+# AT commands over the RIL socket (libmal_rilproxy).
+allow mtkmal rild_mal_socket:sock_file write;
+allow mtkmal rild:unix_stream_socket connectto;
+
+# ePDG daemon sockets
+allow mtkmal epdg_wod_socket:sock_file write;
+allow mtkmal epdg_wod:unix_stream_socket connectto;

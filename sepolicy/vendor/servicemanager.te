@@ -1,0 +1,5 @@
+# servicemanager checks /proc/<pid> of vendor registrants on the framework
+# servicemanager.
+allow servicemanager { hal_camera_default pq }:dir search;
+allow servicemanager { hal_camera_default pq }:file r_file_perms;
+allow servicemanager { hal_camera_default pq }:process getattr;

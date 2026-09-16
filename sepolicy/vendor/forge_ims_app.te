@@ -1,0 +1,32 @@
+# IMS service (com.mediatek.ims). It runs as uid radio, platform-signed, so
+# it lands in the radio domain; these are its IMS client permissions.
+
+# Client of /dev/socket/rild-ims
+allow radio rild_ims_socket:sock_file write;
+allow radio rild:unix_stream_socket connectto;
+
+# Client of /dev/socket/volte_imsm (mtkmal)
+allow radio mtkmal_socket:sock_file write;
+allow radio mtkmal:unix_stream_socket connectto;
+
+# AT channel /dev/radio/atci1 (devpts) used to enable IMS on the modem.
+allow radio device:dir search;
+allow radio devpts:chr_file rw_file_perms;
+
+# Polls init.svc.volte_imcb before enabling IMS on the modem.
+get_prop(radio, default_prop)
+
+# persist.forge.* toggles and init.svc.volte_* readiness
+get_prop(radio, m95_forge_prop)
+get_prop(radio, m95_volte_svc_prop)
+
+# Debug builds: shell may read the toggles; set them as root.
+userdebug_or_eng(`
+  get_prop(shell, m95_forge_prop)
+')
+
+# MTK IMS vendor properties
+get_prop(radio, m95_ims_vendor_prop)
+
+# Keep vendor readers' access after relabelling (same as private/domain.te).
+get_prop({ domain -coredomain -appdomain }, m95_ims_vendor_prop)

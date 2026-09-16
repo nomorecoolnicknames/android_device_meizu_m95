@@ -1,0 +1,5 @@
+# BootReceiver reads /proc/last_kmsg into dropbox.
+allow system_server m95_proc_last_kmsg:file r_file_perms;
+
+# Sensor events from the HIDL sensor service to the camera HAL (EIS, orientation).
+allow system_server hal_camera_default:binder call;

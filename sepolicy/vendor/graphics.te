@@ -1,0 +1,64 @@
+# Graphics: Mali-T880, mtkfb, hwcomposer.mt6797 and gralloc.mt6797 in the
+# passthrough HAL services.
+
+# gralloc.mt6797 in the allocator service
+allow hal_graphics_allocator_default graphics_device:chr_file rw_file_perms;
+allow hal_graphics_allocator_default gpu_device:chr_file rw_file_perms;
+allow hal_graphics_allocator_default ion_device:chr_file rw_file_perms;
+allow hal_graphics_allocator_default MTK_SMI_device:chr_file rw_file_perms;
+allow hal_graphics_allocator_default mtk_m4u_proc:file rw_file_perms;
+
+# hwcomposer.mt6797 in the composer service
+allow hal_graphics_composer_default graphics_device:chr_file rw_file_perms;
+allow hal_graphics_composer_default gpu_device:chr_file rw_file_perms;
+allow hal_graphics_composer_default ion_device:chr_file rw_file_perms;
+allow hal_graphics_composer_default sw_sync_device:chr_file rw_file_perms;
+allow hal_graphics_composer_default MTK_SMI_device:chr_file rw_file_perms;
+allow hal_graphics_composer_default mtk_m4u_proc:file rw_file_perms;
+
+# SurfaceFlinger with the Mali driver
+allow surfaceflinger MTK_SMI_device:chr_file rw_file_perms;
+allow surfaceflinger sw_sync_device:chr_file rw_file_perms;
+allow surfaceflinger mtk_m4u_proc:file rw_file_perms;
+
+# /proc/ged: MTK GPU extension node, used by the whole GPU stack.
+allow hal_graphics_composer_default proc_ged:file r_file_perms;
+allow hal_graphics_allocator_default proc_ged:file r_file_perms;
+allow surfaceflinger proc_ged:file r_file_perms;
+allow bootanim proc_ged:file r_file_perms;
+allow system_server proc_ged:file r_file_perms;
+
+# MTK GuiExt service
+allow hal_graphics_composer_default guiext_service:service_manager find;
+
+# The GuiExt pool in the composer looks up SurfaceFlinger on /dev/binder
+# (ro.vendor.binder.framework_domain=1).
+binder_use(hal_graphics_composer_default)
+binder_call(hal_graphics_composer_default, surfaceflinger)
+allow hal_graphics_composer_default surfaceflinger_service:service_manager find;
+
+# GED and CMDQ ioctl commands: domain.te puts xperm rules on every fs_type
+# pair, so the full command sets from the kernel headers are listed.
+allowxperm {
+  hal_graphics_composer_default
+  hal_graphics_allocator_default
+  surfaceflinger
+  bootanim
+  system_server
+  hal_camera_default
+  cameraserver
+  mediaserver
+  mediacodec
+  appdomain
+  -isolated_app
+} proc_ged:file ioctl { 0x6700-0x6709 0x6764-0x6768 };
+
+allowxperm {
+  hal_graphics_composer_default
+  surfaceflinger
+  hal_camera_default
+  mediacodec
+} proc_cmdq:file ioctl { 0x7801-0x780c };
+
+# GuiExtService registration on vndservicemanager
+add_service(hal_graphics_composer_default, guiext_vndservice)

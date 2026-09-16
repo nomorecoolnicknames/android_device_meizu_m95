@@ -1,0 +1,31 @@
+# Readers and writers of the MTK property types (property.te, property_contexts).
+
+# m95_mtk_config_prop (ro.mtk_*, persist.mtk*, mtk.eccci.*): set from
+# vendor/build.prop, read by every MTK vendor blob.
+get_prop({ domain -coredomain -appdomain }, m95_mtk_config_prop)
+
+# m95_mtk_ril_prop (ril.*, persist.radio.mtk_*)
+# Writers: rild, gsm0710muxd, mtkmal, ccci_mdinit
+set_prop({ rild gsm0710muxd mtkmal ccci_mdinit }, m95_mtk_ril_prop)
+
+# Readers: mnld, audio HAL, epdg_wod, VoLTE daemons
+get_prop({ mnld hal_audio_default epdg_wod volte_ua volte_stack volte_imcb }, m95_mtk_ril_prop)
+
+# persist.radio.multisim.config
+get_prop({ mtkmal epdg_wod }, radio_control_prop)
+
+# Single-owner types
+# init.svc.ril-proxy, polled by ccci_mdinit
+get_prop(ccci_mdinit, m95_vendor_svc_prop)
+
+# debug.hwc.*, published by the composer
+set_prop(hal_graphics_composer_default, m95_hwc_debug_prop)
+
+# ro.vendor.vintf.legacy_kernel, read by system_server
+get_prop(system_server, m95_exported_vendor_prop)
+
+# Call / VoLTE paths
+# Audio HAL modem speech and mute state (af.*, persist.af.*)
+set_prop(hal_audio_default, m95_audio_hal_prop)
+# VoLTE daemon IMS bookkeeping
+set_prop({ volte_ua volte_stack volte_imcb }, m95_volte_prop)

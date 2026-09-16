@@ -1,0 +1,152 @@
+# Block devices
+type nvram_device, dev_type;
+type nvdata_device, dev_type;
+type protect_f_device, dev_type;
+type protect_s_device, dev_type;
+type expdb_block_device, dev_type;
+type logo_block_device, dev_type;
+type seccfg_block_device, dev_type;
+type proinfo_block_device, dev_type;
+type lk_block_device, dev_type;
+type mdimg_block_device, dev_type;
+
+# Character devices
+type stpwmt_device, dev_type;
+type wmtdetect_device, dev_type;
+type wmtWifi_device, dev_type;
+type stpbt_device, dev_type;
+type spm_device, dev_type;
+type stpgps_device, dev_type;
+type fm_device, dev_type;
+type ccci_device, dev_type;
+type sw_sync_device, dev_type;
+type MTK_SMI_device, dev_type;
+type camera_isp_device, dev_type;
+type cam_cal_device, dev_type;
+type hwmsensor_device, dev_type;
+type fingerprint_device, dev_type;
+type mobicore_device, dev_type;
+type mobicore_user_device, dev_type;
+type otp_device, dev_type;
+type mtgpio_device, dev_type;
+type irtx_device, dev_type;
+type touch_device, dev_type;
+type hotknot_device, dev_type;
+type hang_detect_device, dev_type;
+# /dev/devmap: read-only devinfo (efuse) map
+type devmap_device, dev_type;
+
+# Data files
+type nvdata_file, file_type, data_file_type, core_data_file_type;
+type nvcfg_file, file_type;
+type protect_f_data_file, file_type, data_file_type;
+type protect_s_data_file, file_type, data_file_type;
+type mnld_data_file, file_type, data_file_type, core_data_file_type;
+type mtk_sensor_data_file, file_type, data_file_type, core_data_file_type;
+type mcd_data_file, file_type, data_file_type, core_data_file_type;
+# /data/gf_data: Goodix template/calibration store
+type gf_data_file, file_type, data_file_type, core_data_file_type;
+
+# proc / sysfs
+# /proc/m4u
+type mtk_m4u_proc, fs_type, proc_type;
+# /proc/mtk_jpeg (JPEG encoder)
+type proc_mtk_jpeg, fs_type, proc_type;
+# /proc/driver/wmt_dbg, wmt_aee
+type mtk_wmt_proc, fs_type, proc_type;
+# /sys/kernel/ccci
+type sysfs_ccci, fs_type, sysfs_type;
+# /sys/devices/virtual/meizu (alsps sensor nodes)
+type sysfs_meizu, fs_type, sysfs_type;
+# dev_info sysfs node
+type sysfs_dev_info, fs_type, sysfs_type;
+# /sys/module/firmware_class/parameters/path
+type sysfs_fw_class_path, fs_type, sysfs_type;
+
+# Executables
+type nvram_daemon_exec, exec_type, vendor_file_type, file_type;
+type nvram_agent_binder_exec, exec_type, vendor_file_type, file_type;
+type wmt_loader_exec, exec_type, vendor_file_type, file_type;
+type wmt_launcher_exec, exec_type, vendor_file_type, file_type;
+type wmt_concurrency_exec, exec_type, vendor_file_type, file_type;
+type mnld_exec, exec_type, vendor_file_type, file_type;
+type mtk_agpsd_exec, exec_type, vendor_file_type, file_type;
+type mcd_exec, exec_type, vendor_file_type, file_type;
+type fuelgauged_exec, exec_type, vendor_file_type, file_type;
+type batterywarning_exec, exec_type, vendor_file_type, file_type;
+type ccci_fsd_exec, exec_type, vendor_file_type, file_type;
+type ccci_mdinit_exec, exec_type, vendor_file_type, file_type;
+type emdlogger_exec, exec_type, vendor_file_type, file_type;
+type flashlessd_exec, exec_type, vendor_file_type, file_type;
+type gsm0710muxd_exec, exec_type, vendor_file_type, file_type;
+type mdlogger_exec, exec_type, vendor_file_type, file_type;
+type rilproxy_exec, exec_type, vendor_file_type, file_type;
+type statusd_exec, exec_type, vendor_file_type, file_type;
+type terservice_exec, exec_type, vendor_file_type, file_type;
+type viarild_exec, exec_type, vendor_file_type, file_type;
+
+# AKM compass calibration cache (/data/misc/akmd_set.txt)
+type sensor_calib_file, file_type, data_file_type, core_data_file_type;
+
+# /dev/socket/rild-oem: modem OEM control socket, used by the thermal daemon.
+# Not rild_socket, which the phone app can reach.
+type rild_oem_socket, file_type;
+
+# /dev/socket/rild-ims: MTK IMS command socket
+type rild_ims_socket, file_type;
+
+# /dev/socket/rild-mal: RIL socket used by MAL (libmal_rilproxy)
+type rild_mal_socket, file_type;
+
+# /dev/socket/wod_{action,sim,ipsec}: ePDG daemon sockets, used by mtkmal
+type epdg_wod_socket, file_type;
+
+# /data/ipsec: ePDG daemon working directory
+type epdg_wod_data_file, file_type, data_file_type, core_data_file_type;
+
+# MTK procfs
+
+# /proc/ged: MTK GPU extension device, used by every GLES client
+type proc_ged, fs_type, proc_type;
+
+# /proc/mtk_cmdq: MDP/display command queue
+type proc_cmdq, fs_type, proc_type;
+
+# /proc/driver/thermal: MTK thermal driver
+type proc_mtk_thermal, fs_type, proc_type;
+
+# mtkmal sockets: mal-mfi, volte_imsm and their -dongle twins (init.mal.rc)
+type mtkmal_socket, file_type;
+
+# /proc/hps: MTK hotplug governor
+type proc_hps, fs_type, proc_type;
+
+# VoLTE daemon sockets; volte_imcb's channels share one type.
+type volte_stack_socket, file_type;
+type volte_ua_socket, file_type;
+type volte_imcb_socket, file_type;
+
+# /data/ccci_cfg: modem config store
+type ccci_cfg_file, file_type, data_file_type, core_data_file_type;
+
+# /proc/last_kmsg
+type m95_proc_last_kmsg, fs_type, proc_type;
+
+# /proc/sys/vm/swappiness
+type m95_proc_swappiness, fs_type, proc_type;
+
+# /sys/kernel/debug/ged/hal/custom_boost_gpu_freq: GPU frequency floor
+type m95_debugfs_ged_boost, fs_type, debugfs_type;
+
+# Performance tuning procfs (m95-perfprofile.sh)
+# /proc/ppm: PPM power state
+type m95_proc_ppm, fs_type, proc_type;
+# /proc/cpufreq: cpufreq_power_mode
+type m95_proc_cpufreq, fs_type, proc_type;
+# /proc/perfmgr: touch boost
+type m95_proc_perfmgr, fs_type, proc_type;
+# /proc/mtkcooler: thermal cooler conditions
+type m95_proc_mtkcooler, fs_type, proc_type;
+
+# /proc/sys/debug/exception-trace
+type proc_m95_exception_trace, fs_type, proc_type;

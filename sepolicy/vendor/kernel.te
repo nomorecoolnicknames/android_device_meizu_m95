@@ -1,0 +1,10 @@
+# cpuset hotplug moves tasks out of an emptied cpuset (cpuset_can_attach
+# checks setsched against whatever task is there).
+allow kernel domain:process setsched;
+
+# mtk_wmtd reads the Wi-Fi NVRAM (crystal trim, MAC, calibration).
+allow kernel nvdata_file:dir search;
+allow kernel nvdata_file:file r_file_perms;
+
+# dac_override is a spurious capable() probe: DAC already allows the access.
+dontaudit kernel self:capability dac_override;

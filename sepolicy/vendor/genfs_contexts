@@ -1,0 +1,45 @@
+# M4U
+genfscon proc /m4u u:object_r:mtk_m4u_proc:s0
+# JPEG encoder
+genfscon proc /mtk_jpeg u:object_r:proc_mtk_jpeg:s0
+
+# WMT debug/trigger entries
+genfscon proc /driver/wmt_dbg u:object_r:mtk_wmt_proc:s0
+genfscon proc /driver/wmt_aee u:object_r:mtk_wmt_proc:s0
+
+# CCCI modem status
+genfscon sysfs /kernel/ccci u:object_r:sysfs_ccci:s0
+
+# LEDs
+genfscon sysfs /devices/platform/leds-mt65xx u:object_r:sysfs_leds:s0
+
+# Meizu class devices
+genfscon sysfs /devices/virtual/meizu u:object_r:sysfs_meizu:s0
+
+# Battery (bq27532 fuel gauge). /sys/class/power_supply entries are symlinks,
+# so the real device path is labelled as well.
+genfscon sysfs /class/power_supply u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/battery/power_supply u:object_r:sysfs_batteryinfo:s0
+
+# MTK GPU extension device, command queue and thermal driver
+genfscon proc /ged u:object_r:proc_ged:s0
+genfscon proc /mtk_cmdq u:object_r:proc_cmdq:s0
+genfscon proc /driver/thermal u:object_r:proc_mtk_thermal:s0
+
+# MTK CPU hotplug (hps)
+genfscon proc /hps u:object_r:proc_hps:s0
+
+genfscon proc /last_kmsg u:object_r:m95_proc_last_kmsg:s0
+genfscon proc /sys/vm/swappiness u:object_r:m95_proc_swappiness:s0
+genfscon debugfs /ged/hal/custom_boost_gpu_freq u:object_r:m95_debugfs_ged_boost:s0
+
+# Performance tuning (PPM, cpufreq, perfmgr, coolers)
+genfscon proc /ppm u:object_r:m95_proc_ppm:s0
+genfscon proc /cpufreq u:object_r:m95_proc_cpufreq:s0
+genfscon proc /perfmgr u:object_r:m95_proc_perfmgr:s0
+genfscon proc /mtkcooler u:object_r:m95_proc_mtkcooler:s0
+
+# Firmware search path
+genfscon sysfs /module/firmware_class/parameters/path u:object_r:sysfs_fw_class_path:s0
+
+genfscon proc /sys/debug/exception-trace u:object_r:proc_m95_exception_trace:s0

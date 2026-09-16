@@ -1,0 +1,5 @@
+# gatekeeper.mt6797.so keeps its failure records in files relative to the
+# working directory; the service chdir()s to /data/misc/gatekeeper, as
+# gatekeeperd used to. Without this, PIN verification always fails.
+allow hal_gatekeeper_default gatekeeper_data_file:dir rw_dir_perms;
+allow hal_gatekeeper_default gatekeeper_data_file:file create_file_perms;

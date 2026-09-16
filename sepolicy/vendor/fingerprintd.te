@@ -1,0 +1,40 @@
+# Goodix fingerprint daemon (/vendor/bin/goodixfingerprintd), a vendor domain
+# serving the HAL over vndbinder.
+
+type goodixfpd, domain;
+type goodixfpd_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(goodixfpd)
+
+vndbinder_use(goodixfpd)
+add_service(goodixfpd, goodixfpd_vndservice)
+
+vndbinder_use(hal_fingerprint_default)
+allow hal_fingerprint_default goodixfpd_vndservice:service_manager find;
+
+# fingerprint.default.so in the @2.0 HAL service is the daemon's only client.
+
+# Callbacks run both ways.
+binder_call(hal_fingerprint, goodixfpd)
+binder_call(goodixfpd, hal_fingerprint)
+
+# Sensor and TEE. The daemon also injects KEY_BACK for mBack taps on the
+# fp-keys input node.
+allow goodixfpd fingerprint_device:chr_file rw_file_perms;
+
+# libgf_ca -> libMcClient -> /dev/mobicore-user and the mcd socket
+allow goodixfpd mobicore_user_device:chr_file rw_file_perms;
+allow goodixfpd mcd:unix_stream_socket connectto;
+r_dir_file(goodixfpd, mcd_data_file)
+
+# Template / calibration store
+allow goodixfpd gf_data_file:dir create_dir_perms;
+allow goodixfpd gf_data_file:file create_file_perms;
+
+# Self-binder and property service
+
+# Netlink socket from the Goodix driver: every finger event arrives here.
+allow goodixfpd self:netlink_socket { create bind read write setopt };
+
+# The @2.0 HAL service writes the legacy fpdata store.
+allow hal_fingerprint_default fingerprintd_data_file:dir rw_dir_perms;
+allow hal_fingerprint_default fingerprintd_data_file:file create_file_perms;

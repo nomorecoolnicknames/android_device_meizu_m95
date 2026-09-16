@@ -1,0 +1,18 @@
+# Binder services added by this device.
+type nvram_agent_service, service_manager_type, vendor_service;
+# IGoodixFingerprintDaemon, registered by goodixfingerprintd
+type goodixfingerprintd_service, service_manager_type;
+# GuiExtService: MTK SurfaceFlinger/gralloc extension service
+type guiext_service, service_manager_type, vendor_service;
+# "SurfaceFlinger" mirrored on vndbinder (ro.vendor.sf.vndbinder), looked up
+# by the GuiExt pool in the composer.
+type surfaceflinger_vndservice, vndservice_manager_type;
+
+# PQ daemon
+type pq_service, service_manager_type, vendor_service;
+
+# Services registered with vndservicemanager (VNDK libbinder)
+type goodixfpd_vndservice, vndservice_manager_type;
+type nvram_agent_vndservice, vndservice_manager_type;
+type guiext_vndservice, vndservice_manager_type;
+type pq_vndservice, vndservice_manager_type;
