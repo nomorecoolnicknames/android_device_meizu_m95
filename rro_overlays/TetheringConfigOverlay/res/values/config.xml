@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The MTK hotspot interface is ap0; the default regexes match only
+         wlan\d, softap\d and ap_br_*, so it would never be tethered. -->
+    <string-array translatable="false" name="config_tether_wifi_regexs">
+        <item>"wlan\\d"</item>
+        <item>"ap\\d"</item>
+        <item>"softap\\d"</item>
+        <item>"ap_br_wlan\\d"</item>
+        <item>"ap_br_softap\\d"</item>
+    </string-array>
+</resources>

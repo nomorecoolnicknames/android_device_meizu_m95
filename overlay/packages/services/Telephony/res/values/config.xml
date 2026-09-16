@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    IMS service package for MMTEL (com.android.phone binds it for every slot;
+    the IMS service decides per slot which features it supports). RCS is not
+    supported.
+-->
+<resources>
+    <string name="config_ims_mmtel_package" translatable="false">com.mediatek.ims</string>
+</resources>

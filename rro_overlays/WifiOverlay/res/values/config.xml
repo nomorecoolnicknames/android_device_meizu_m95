@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- No randomized hotspot BSSID: the ap0 interface cannot change its MAC
+         while up, and SoftApManager fails the start if setting it fails. With
+         randomization off a failed reset is not fatal. -->
+    <bool translatable="false" name="config_wifi_ap_mac_randomization_supported">false</bool>
+</resources>

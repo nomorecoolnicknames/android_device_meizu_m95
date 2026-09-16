@@ -114,6 +114,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/tfa98xx.cnt:$(TARGET_COPY_OUT_VENDOR)/firmware/tfa98xx.cnt \
     $(LOCAL_PATH)/prebuilt/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/hals.conf
 
+# Hotspot: ap0 as a tetherable interface, no randomized AP BSSID.
+PRODUCT_PACKAGES += \
+    M95TetheringConfigOverlay \
+    M95WifiOverlay
+
+PRODUCT_COPY_FILES += \
+    external/wpa_supplicant_8/wpa_supplicant/wpa_supplicant_template.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf
+
 # Keylayouts
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/ACCDET.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/ACCDET.kl \

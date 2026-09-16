@@ -1,0 +1,8 @@
+// Tethering reads its interface regexes from its own package, so a
+// framework-res overlay has no effect; "TetheringConfig" allows vendor overlays.
+runtime_resource_overlay {
+    name: "M95TetheringConfigOverlay",
+    resource_dirs: ["res"],
+    vendor: true,
+    sdk_version: "current",
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LED capabilities (LightsCapabilities): the home button LED is a mono
+         white LED that can pulse and serves as the battery LED.
+         8 (pulsating) | 64 (battery LED present) = 72. -->
+    <integer name="config_deviceLightCapabilities">72</integer>
+
+    <!-- mBack: press = Home (PMIC HOMEKEY on mtk-kpd), tap = Back (KEY_BACK
+         from the Goodix daemon on fp-keys), hold = Home long press.
+         Hardware keys: 1 Home | 2 Back | 64 Volume = 67. -->
+    <integer name="config_deviceHardwareKeys">67</integer>
+
+    <!-- Only Home wakes the screen; volume and the capacitive tap would cause
+         false wake-ups in a pocket. -->
+    <integer name="config_deviceHardwareWakeKeys">1</integer>
+
+    <!-- Hold mBack = recent apps (2 = Action.APP_SWITCH). Double tap stays off:
+         it would delay every single press. -->
+    <integer name="config_longPressOnHomeBehavior">2</integer>
+</resources>

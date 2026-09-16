@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Biometric sensors for AuthService: "ID:modality:strength", fingerprint (2)
+    with BIOMETRIC_STRONG (15).
+-->
+<resources>
+    <string-array name="config_biometric_sensors" translatable="false" >
+        <item>0:2:15</item> <!-- ID0:Fingerprint:Strong -->
+    </string-array>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<!--
+    Carrier config overrides, applied on top of the per-carrier assets for the
+    matching MCC/MNC. carrier_volte_available_bool is false by default for these
+    carriers.
+-->
+<carrier_config_list>
+    <!-- MegaFon -->
+    <carrier_config mcc="250" mnc="02">
+        <boolean name="carrier_volte_available_bool" value="true" />
+    </carrier_config>
+    <!-- MTS -->
+    <carrier_config mcc="250" mnc="01">
+        <boolean name="carrier_volte_available_bool" value="true" />
+    </carrier_config>
+    <!-- Tele2 -->
+    <carrier_config mcc="250" mnc="20">
+        <boolean name="carrier_volte_available_bool" value="true" />
+    </carrier_config>
+    <!-- Beeline -->
+    <carrier_config mcc="250" mnc="99">
+        <boolean name="carrier_volte_available_bool" value="true" />
+    </carrier_config>
+</carrier_config_list>

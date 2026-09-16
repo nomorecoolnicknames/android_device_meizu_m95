@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    IMS APNs, added to the partner APN database. A type=ims APN is required
+    for the IMS PDN. The version must match the partner database, otherwise it
+    is dropped entirely. protocol is IP rather than IPV4V6: the MTK RIL routes
+    IPV4V6 setup calls through a path that loses the P-CSCF discovery flag.
+-->
+<apns version="8">
+    <apn carrier="MegaFon IMS"
+         mcc="250"
+         mnc="02"
+         apn="ims"
+         type="ims"
+         protocol="IP"
+         roaming_protocol="IP"
+         carrier_enabled="true" />
+
+    <apn carrier="MTS IMS"
+         mcc="250"
+         mnc="01"
+         apn="ims"
+         type="ims"
+         protocol="IP"
+         roaming_protocol="IP"
+         carrier_enabled="true" />
+    <apn carrier="Tele2 IMS"
+         mcc="250"
+         mnc="20"
+         apn="ims"
+         type="ims"
+         protocol="IP"
+         roaming_protocol="IP"
+         carrier_enabled="true" />
+    <apn carrier="T-Mobile IMS"
+         mcc="250"
+         mnc="62"
+         apn="ims"
+         type="ims"
+         protocol="IP"
+         roaming_protocol="IP"
+         carrier_enabled="true" />
+</apns>
