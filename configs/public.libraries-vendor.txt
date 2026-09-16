@@ -1,0 +1,8 @@
+# Vendor libraries that applications may load; replaces the stock copy (its
+# Trustonic entries are kept). Nothing here is preloaded, and apps targeting
+# SDK > 30 must list an entry in <uses-native-library>.
+libMcClient.so
+libMcRegistry.so
+# libwfo_jni.so: used by the IMS service (WifiOffloadService) to pass the SIM
+# identity to MAL's ePDG entity. Its dependencies resolve in sphal.
+libwfo_jni.so

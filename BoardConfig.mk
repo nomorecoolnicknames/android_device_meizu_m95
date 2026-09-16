@@ -181,3 +181,11 @@ TARGET_LD_SHIM_LIBS += \
 TARGET_LD_SHIM_LIBS += \
     /vendor/bin/spm_loader|liblog.so
 
+# VoLTE log filter: drop VoLTE daemon INFO-and-below logs, which contain full
+# SIP messages. Opt-in: M95_VOLTE_LOGFILTER=true.
+ifeq ($(M95_VOLTE_LOGFILTER),true)
+TARGET_LD_SHIM_LIBS += \
+    /vendor/bin/volte_stack|/vendor/lib/libm95volte_logfilter.so \
+    /vendor/bin/volte_ua|/vendor/lib/libm95volte_logfilter.so \
+    /vendor/bin/volte_imcb|/vendor/lib/libm95volte_logfilter.so
+endif

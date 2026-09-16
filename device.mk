@@ -16,6 +16,11 @@ PRODUCT_SOONG_NAMESPACES += \
 # with ro.vndk.version=30 still boots (as the Android 13 GSI does).
 PRODUCT_EXTRA_VNDK_VERSIONS := 30
 
+# Vendor public libraries: the stock list plus libwfo_jni.so for the IMS service.
+# Keep above the vendor inherit: the first PRODUCT_COPY_FILES entry for a path wins.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/public.libraries-vendor.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
+
 # Audio effects: without a vendor audio_effects.xml the effects factory falls
 # back to /system/etc/audio_effects.conf, which a vendor HAL may not read.
 PRODUCT_COPY_FILES += \
@@ -152,6 +157,12 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
     android.hardware.bluetooth@1.0-service
 
+# VoLTE log filter, opt-in: M95_VOLTE_LOGFILTER=true.
+ifeq ($(M95_VOLTE_LOGFILTER),true)
+PRODUCT_PACKAGES += \
+    libm95volte_logfilter
+endif
+
 # Gatekeeper: AOSP software implementation; the vendor blob needs the N-era
 # libgatekeeper ABI. Existing lock credentials will not verify after switching.
 PRODUCT_PACKAGES += \
@@ -218,6 +229,11 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.hardware.consumerir.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.consumerir.xml
+
+# Privapp permissions for the IMS service: required with
+# ro.control_privapp_permissions=enforce.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/permissions/privapp-permissions-com.mediatek.ims.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-com.mediatek.ims.xml
 
 # Media
 # media_profiles.xml is installed as media_profiles_V1_0.xml, the default
