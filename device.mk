@@ -262,6 +262,10 @@ PRODUCT_COPY_FILES += \
     $(AUDIO_POLICY_CFG_DIR)/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     $(AUDIO_POLICY_CFG_DIR)/surround_sound_configuration_5_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/surround_sound_configuration_5_0.xml
 
+# Seccomp: additional mediacodec policy for the MTK video encoders.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy
+
 # ADB
 # M95_ADB_KEYS: optional file of adb public keys installed as /adb_keys
 # (eng/userdebug only); empty by default.
