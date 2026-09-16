@@ -167,6 +167,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/tfa98xx.cnt:$(TARGET_COPY_OUT_VENDOR)/firmware/tfa98xx.cnt \
     $(LOCAL_PATH)/prebuilt/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/hals.conf
 
+# Wi-Fi
+PRODUCT_PACKAGES += \
+    lib_driver_cmd_mt66xx \
+    libwifi-hal-mt66xx \
+    hostapd \
+    wificond \
+    wpa_supplicant \
+    libwpa_client
+
 # Hotspot: ap0 as a tetherable interface, no randomized AP BSSID.
 PRODUCT_PACKAGES += \
     M95TetheringConfigOverlay \
@@ -174,6 +183,11 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     external/wpa_supplicant_8/wpa_supplicant/wpa_supplicant_template.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf
+
+# FM radio
+# The kernel opens the mt6631 DSP patch by absolute path under /system/etc/firmware.
+PRODUCT_PACKAGES += \
+    FMRadio
 
 # Keylayouts
 PRODUCT_COPY_FILES += \

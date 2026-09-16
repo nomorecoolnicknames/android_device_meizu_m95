@@ -139,6 +139,28 @@ TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 # SELinux
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 
+# Wi-Fi
+BOARD_WLAN_DEVICE := MediaTek
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_mt66xx
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_mt66xx
+WIFI_DRIVER_STATE_CTRL_PARAM := /dev/wmtWifi
+WIFI_DRIVER_STATE_ON := 1
+WIFI_DRIVER_STATE_OFF := 0
+# Hotspot: the Wi-Fi HAL switches firmware mode by writing these strings to
+# /dev/wmtWifi ('A' = AP mode with ap0, 'S'/'P' = STA mode with p2p0).
+WIFI_DRIVER_FW_PATH_PARAM := /dev/wmtWifi
+WIFI_DRIVER_FW_PATH_STA := STA
+WIFI_DRIVER_FW_PATH_AP := AP
+WIFI_DRIVER_FW_PATH_P2P := P2P
+# The driver rejects SIOCSIFHWADDR; a failed MAC change would leave wlan0 down.
+WIFI_AVOID_IFACE_RESET_MAC_CHANGE := true
+
+# Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+
 # Graphics
 # The MTK vendor usage bit 26 must be accepted by the gralloc0 adapter.
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS ?= 0
