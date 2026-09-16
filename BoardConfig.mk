@@ -117,6 +117,10 @@ TARGET_SCREEN_WIDTH := 1080
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_DENSITY := 480
 
+# Treble
+# Shipping API level is 25, below the level that enables Treble by itself.
+PRODUCT_FULL_TREBLE_OVERRIDE := true
+
 # VNDK
 # BOARD_VNDK_VERSION := 30 does not work: vendor APEXes and vendor snapshot
 # requirements break soong_build, so the vendor is built against the platform VNDK.
@@ -124,6 +128,9 @@ BOARD_VNDK_VERSION := current
 
 # VNDK-lite no longer exists: libraries a vendor process needs from /system
 # must be copied to /vendor, but never a VNDK library the vendor also uses.
+
+# VINTF
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
