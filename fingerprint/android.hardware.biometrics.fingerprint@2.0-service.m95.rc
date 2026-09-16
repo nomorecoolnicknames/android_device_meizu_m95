@@ -1,0 +1,10 @@
+# Fingerprint HAL. Lazy: hwservicemanager starts it when FingerprintService
+# first asks for it, after goodixfingerprintd (class main) is up; the daemon's
+# rc also restarts vendor.fps_hal. /dev/goodix_fp is owned by the daemon.
+service vendor.fps_hal /vendor/bin/hw/android.hardware.biometrics.fingerprint@2.0-service.m95
+    interface android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint default
+    class late_start
+    disabled
+    user system
+    group system input uhid
+    writepid /dev/cpuset/system-background/tasks

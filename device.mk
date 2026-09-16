@@ -157,6 +157,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software
 
+# Fingerprint: device copy of the LineageOS @2.0 service, adapted to the
+# vendor blob's larger device struct and missing enumerate.
+PRODUCT_PACKAGES += \
+    android.hardware.biometrics.fingerprint@2.0-service.m95
+
 # TFA98xx speaker DSP firmware; sensors multi-HAL list (hals.conf).
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/tfa98xx.cnt:$(TARGET_COPY_OUT_VENDOR)/firmware/tfa98xx.cnt \
