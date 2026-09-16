@@ -16,6 +16,11 @@ PRODUCT_SOONG_NAMESPACES += \
 # with ro.vndk.version=30 still boots (as the Android 13 GSI does).
 PRODUCT_EXTRA_VNDK_VERSIONS := 30
 
+# Audio effects: without a vendor audio_effects.xml the effects factory falls
+# back to /system/etc/audio_effects.conf, which a vendor HAL may not read.
+PRODUCT_COPY_FILES += \
+    frameworks/av/media/libeffects/data/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.conf
+
 # Vendor blobs
 $(call inherit-product, vendor/meizu/m95/m95-vendor.mk)
 $(call inherit-product, vendor/meizu/m95/m95-vendor-extra.mk)
@@ -163,6 +168,21 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/media/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     $(LOCAL_PATH)/media/media_codecs_google_video_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video_le.xml \
     $(LOCAL_PATH)/media/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
+
+# Audio
+# Audio policy configuration converted from the stock audio_policy.conf.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml
+
+# xi:include targets: copied rather than packaged, next to the including file.
+AUDIO_POLICY_CFG_DIR := frameworks/av/services/audiopolicy/config
+PRODUCT_COPY_FILES += \
+    $(AUDIO_POLICY_CFG_DIR)/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
+    $(AUDIO_POLICY_CFG_DIR)/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
+    $(AUDIO_POLICY_CFG_DIR)/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
+    $(AUDIO_POLICY_CFG_DIR)/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
+    $(AUDIO_POLICY_CFG_DIR)/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
+    $(AUDIO_POLICY_CFG_DIR)/surround_sound_configuration_5_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/surround_sound_configuration_5_0.xml
 
 # ADB
 # M95_ADB_KEYS: optional file of adb public keys installed as /adb_keys
