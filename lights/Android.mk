@@ -1,0 +1,15 @@
+# lights.mt6797 built from source (see lights.c). The stock blob must not be
+# copied as well: copy rules would overwrite this module in the image.
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := lights.mt6797
+LOCAL_MODULE_RELATIVE_PATH := hw
+LOCAL_PROPRIETARY_MODULE := true
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := lights.c
+LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_HEADER_LIBRARIES := libhardware_headers
+LOCAL_MULTILIB := both
+LOCAL_CFLAGS := -Wall -Werror
+include $(BUILD_SHARED_LIBRARY)
