@@ -1,0 +1,276 @@
+// Vendor shims for the N-era MTK blobs, installed via PRODUCT_PACKAGES
+// (device.mk) and, where needed, TARGET_LD_SHIM_LIBS (BoardConfig.mk).
+cc_defaults {
+    name: "m95shim_defaults",
+    vendor: true,
+    cflags: ["-Wno-unused-parameter"],
+}
+
+cc_library_shared {
+    name: "libm95shim_gui",
+    defaults: ["m95shim_defaults"],
+    srcs: ["gui.cpp"],
+    shared_libs: ["liblog"],
+    // Symbols are declared manually and resolved at runtime (see gui.cpp);
+    // linking the system libgui would be a VNDK violation.
+    allow_undefined_symbols: true,
+}
+
+// libgui_m95.so / libsensor_m95.so: sonames the rewired N blobs need. Each is
+// an empty library with DT_NEEDED on libgui_vendor / libsensor_vendor, so all
+// consumers bind to the single real instance in the process.
+cc_library_shared {
+    name: "libgui_m95",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+    shared_libs: ["libgui_vendor"],
+}
+
+cc_library_shared {
+    name: "libsensor_m95",
+    defaults: ["m95shim_defaults"],
+    srcs: [
+        "stub.cpp",
+        "sensor.cpp",
+    ],
+    shared_libs: [
+        "libsensor_vendor",
+        "liblog",
+    ],
+}
+
+cc_library_shared {
+    name: "libm95shim_power",
+    defaults: ["m95shim_defaults"],
+    srcs: ["power.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_audioutils",
+    defaults: ["m95shim_defaults"],
+    srcs: ["audioutils.cpp"],
+    // String8::String8() is resolved from libutils at runtime.
+    allow_undefined_symbols: true,
+}
+
+cc_library_shared {
+    name: "libm95shim_ui",
+    defaults: ["m95shim_defaults"],
+    srcs: ["ui.cpp"],
+    // N-ABI entries defined here, newer-ABI targets resolved at runtime.
+    // libsync/liblog are LLNDK; libui is reached with dlsym, not linked.
+    shared_libs: [
+        "libdl",
+        "liblog",
+        "libsync",
+    ],
+    allow_undefined_symbols: true,
+}
+
+cc_library_shared {
+    name: "libm95shim_utils",
+    defaults: ["m95shim_defaults"],
+    srcs: [
+        "utils.cpp",
+        "propertymap.cpp",
+    ],
+    shared_libs: ["libutils"],
+    // MemoryHeapBase forwarders resolve libbinder constructors at runtime.
+    allow_undefined_symbols: true,
+}
+
+cc_library_shared {
+    name: "libm95shim_sf",
+    defaults: ["m95shim_defaults"],
+    srcs: ["sf.cpp"],
+}
+
+// N-layout android::Parcel box for the stock MTK libril (librilimp.so). The
+// blob keeps 104-byte Nougat Parcels; its Parcel imports are renamed to
+// android::Pbrcel and proxy to a heap-allocated real Parcel (see nparcel.cpp).
+cc_library_shared {
+    name: "libm95shim_nparcel",
+    defaults: ["m95shim_defaults"],
+    srcs: ["nparcel.cpp"],
+    shared_libs: [
+        "libbinder",
+        "libutils",
+        "liblog",
+    ],
+}
+
+// N-layout android::Region for the Mali EGL driver (see region.cpp).
+cc_library_shared {
+    name: "libm95shim_region",
+    defaults: ["m95shim_defaults"],
+    srcs: ["region.cpp"],
+    header_libs: ["libutils_headers", "liblog_headers"],
+    shared_libs: ["liblog"],
+    cflags: ["-fvisibility=hidden"],
+}
+
+cc_library_shared {
+    name: "libm95shim_net",
+    defaults: ["m95shim_defaults"],
+    srcs: ["net.c"],
+}
+
+// libnetd_client.so: setNetworkForSocket for volte_stack, forwarded to the
+// LLNDK android_setsocknetwork (see netd_client.c). 32-bit only.
+cc_library_shared {
+    name: "libm95shim_netd_client",
+    defaults: ["m95shim_defaults"],
+    stem: "libnetd_client",
+    srcs: ["netd_client.c"],
+    shared_libs: ["libandroid_net"],
+    compile_multilib: "32",
+}
+
+// libm95probe: empty; some blobs still list it in DT_NEEDED (see probe.c).
+cc_library_shared {
+    name: "libm95probe",
+    defaults: ["m95shim_defaults"],
+    srcs: ["probe.c"],
+}
+
+// libm95trace: manual LD_PRELOAD diagnostic tracer, never installed.
+// Build with `m libm95trace`.
+cc_library_shared {
+    name: "libm95trace",
+    defaults: ["m95shim_defaults"],
+    srcs: ["trace.c"],
+    shared_libs: ["libdl"],
+}
+
+// `stem` keeps the filename the blob expects while the module name stays
+// unique (libfs_mgr / libskia are taken by static modules).
+
+// libfs_mgr.so: N-layout fstab reader for libnvram.so.
+cc_library_shared {
+    name: "libm95shim_fs_mgr",
+    defaults: ["m95shim_defaults"],
+    stem: "libfs_mgr",
+    srcs: ["fs_mgr.c"],
+}
+
+// libskia.so: empty DT_NEEDED placeholder for blobs that import no Sk* symbols.
+cc_library_shared {
+    name: "libm95shim_skia",
+    defaults: ["m95shim_defaults"],
+    stem: "libskia",
+    srcs: ["skia.cpp"],
+}
+
+// Placeholders for system-only libraries listed in DT_NEEDED of vendor blobs
+// (see stub.cpp). Unique names: blobs with real imports still resolve to the
+// system copy.
+cc_library_shared {
+    name: "libm95shim_camera_client",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_media",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_mediautils",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_android_runtime",
+    defaults: ["m95shim_defaults"],
+    srcs: ["android_runtime.cpp"],
+}
+
+// Placeholders and JNI shims for the camera HAL chain and the audio HAL's
+// libaudio_param_parser.so.
+cc_library_shared {
+    name: "libm95shim_icuuc",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_icui18n",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_android",
+    defaults: ["m95shim_defaults"],
+    srcs: ["android.c"],
+}
+
+cc_library_shared {
+    name: "libm95shim_drmframework",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_stagefright",
+    defaults: ["m95shim_defaults"],
+    srcs: ["stub.cpp"],
+}
+
+cc_library_shared {
+    name: "libm95shim_jnigraphics",
+    defaults: ["m95shim_defaults"],
+    srcs: ["jnigraphics.c"],
+}
+
+// libbt-vendor.so (64-bit only), forwarding to the 64-bit libbluetooth_mtk.so
+// (see bt_vendor.c).
+cc_library_shared {
+    name: "libm95shim_btvendor",
+    defaults: ["m95shim_defaults"],
+    stem: "libbt-vendor",
+    srcs: ["bt_vendor.c"],
+    compile_multilib: "64",
+    shared_libs: ["liblog", "libdl"],
+}
+
+// SSLv3_{client,server}_method for mtk_agpsd and libcurl-ss (see ssl.c).
+cc_library_shared {
+    name: "libm95shim_ssl",
+    defaults: ["m95shim_defaults"],
+    srcs: ["ssl.c"],
+    // libssl loads right after this shim; its calls go through dlsym(RTLD_NEXT).
+    shared_libs: ["libssl", "liblog", "libdl"],
+}
+
+// No-op pthread_mutex_destroy for mnld: libmnl.so destroys its mutex twice
+// and bionic FORTIFY aborts (see pthread.c).
+cc_library_shared {
+    name: "libm95shim_mnld",
+    defaults: ["m95shim_defaults"],
+    srcs: ["pthread.c"],
+    compile_multilib: "32",
+}
+
+// libperfservicenative.so replacement (see perfservice.c): the stock client
+// deadlocks the camera provider without the perfservice daemon.
+cc_library_shared {
+    name: "libm95shim_perfservice",
+    defaults: ["m95shim_defaults"],
+    stem: "libperfservicenative",
+    srcs: ["perfservice.c"],
+}
+
+// VoLTE log filter (see volte_log.c): drops INFO-and-below VoLTE* logs, which
+// contain full SIP messages. Only with M95_VOLTE_LOGFILTER=true.
+cc_library_shared {
+    name: "libm95volte_logfilter",
+    defaults: ["m95shim_defaults"],
+    srcs: ["volte_log.c"],
+    shared_libs: ["liblog"],
+    compile_multilib: "32",
+    cflags: ["-Wall", "-Werror"],
+}

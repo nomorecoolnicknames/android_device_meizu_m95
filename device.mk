@@ -30,6 +30,49 @@ PRODUCT_PACKAGES += \
     vulkan.mt6797_symlinks \
     librilimp
 
+# libstdc++ as a vendor copy: the 32-bit Mali closure needs it and it is
+# neither LLNDK nor VNDK.
+PRODUCT_PACKAGES += \
+    libstdc++.vendor
+
+# Vendor variants of non-VNDK framework libraries used by the N blobs.
+# libgui_m95/libsensor_m95 are forwarders with DT_NEEDED on the real library.
+PRODUCT_PACKAGES += \
+    libgui_vendor \
+    libsensor_vendor \
+    libgui_m95 \
+    libsensor_m95
+
+# Shims
+PRODUCT_PACKAGES += \
+    libm95shim_gui \
+    libm95shim_power \
+    libm95shim_audioutils \
+    libm95shim_ui \
+    libm95shim_utils \
+    libm95shim_sf \
+    libm95shim_nparcel \
+    libm95shim_net \
+    libm95shim_netd_client \
+    libm95shim_region \
+    libm95shim_fs_mgr \
+    libm95shim_skia \
+    libm95shim_camera_client \
+    libm95shim_media \
+    libm95shim_mediautils \
+    libm95shim_android_runtime \
+    libm95shim_icuuc \
+    libm95shim_icui18n \
+    libm95shim_android \
+    libm95shim_drmframework \
+    libm95shim_stagefright \
+    libm95shim_jnigraphics \
+    libm95shim_btvendor \
+    libm95shim_ssl \
+    libm95shim_mnld \
+    libm95shim_perfservice \
+    libm95probe
+
 # Flyme system libraries are not shipped; re-add together with the camera apps.
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries-meizu.txt:$(TARGET_COPY_OUT_SYSTEM)/etc/public.libraries-meizu.txt
@@ -205,4 +248,10 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.debuggable=1 \
     ro.adb.secure=0
 endif
+
+# Vendor copies of VNDK-core libraries for the sphal namespace
+# (needed by the Mali blob chain).
+PRODUCT_COPY_FILES += \
+    vendor/meizu/m95/proprietary/vendor/lib64/libnetutils.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libnetutils.so \
+    vendor/meizu/m95/proprietary/vendor/lib/libnetutils.so:$(TARGET_COPY_OUT_VENDOR)/lib/libnetutils.so
 

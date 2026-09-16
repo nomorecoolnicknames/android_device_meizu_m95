@@ -149,3 +149,13 @@ TARGET_OTA_ASSERT_DEVICE := m95,M95,m685,MX6,mx6
 # Vendor
 include vendor/meizu/m95/BoardConfigVendor.mk
 
+# Shims
+# Camera RAW16: the metadata library must be loaded RTLD_GLOBAL into the camera
+# provider before its DT_NEEDED; LD_PRELOAD is dropped under AT_SECURE.
+TARGET_LD_SHIM_LIBS += \
+    /vendor/bin/hw/android.hardware.camera.provider@2.4-service|/vendor/lib/libm95_camera_metadata_raw.so
+
+# spm_loader uses __android_log_print without liblog in DT_NEEDED.
+TARGET_LD_SHIM_LIBS += \
+    /vendor/bin/spm_loader|liblog.so
+
