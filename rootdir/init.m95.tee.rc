@@ -1,0 +1,26 @@
+# Trustonic TEE daemon (mcDriverDaemon), used by the keymaster, gatekeeper and
+# fingerprint stacks. Its registry is /data/misc/mcRegistry.
+
+on fs
+    # Device node permissions for mcDriverDaemon (user system).
+    chmod 0600 /dev/mobicore
+    chown system system /dev/mobicore
+    chmod 0666 /dev/mobicore-user
+    chown system system /dev/mobicore-user
+    mkdir /data/misc/mcRegistry 0775 system system
+    mkdir /data/misc/mcRegistry/TbStorage 0775 system system
+    start mobicore
+
+on post-fs-data
+    # Again after a /data wipe.
+    mkdir /data/misc/mcRegistry 0775 system system
+    mkdir /data/misc/mcRegistry/TbStorage 0775 system system
+    # Relabel registries created before the file_contexts entry.
+    restorecon_recursive /data/misc/mcRegistry
+
+# Secure drivers: the stock list without 020b...drbin, which is not shipped.
+service mobicore /vendor/bin/mcDriverDaemon -r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin -r /vendor/app/mcRegistry/070b0000000000000000000000000000.drbin -r /vendor/app/mcRegistry/05070000000000000000000000000000.drbin
+    class core
+    user system
+    group system
+    oneshot

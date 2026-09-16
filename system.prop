@@ -1,0 +1,28 @@
+# StrictMode off for system processes (the userdebug WTF dialog).
+persist.sys.strictmode.disable=true
+
+# Force the framework VoLTE availability gate (device side only).
+persist.dbg.volte_avail_ovr=1
+
+# No continuous SurfaceFlinger transaction trace on userdebug.
+debug.sf.enable_transaction_tracing=false
+
+# Do not log ICCID, own number or IMS identity at DEBUG from these framework
+# and IMS service tags (see log.tag.AT in vendor.prop for the vendor side).
+log.tag.SubscriptionController=I
+log.tag.SuppServExt=I
+log.tag.ImsConfigManager=I
+log.tag.ImsUtImpl=I
+log.tag.@M_ImsSimservsDispatcher=I
+
+# Legacy GLES RenderEngine: Skia-GL faults on the Mali driver. Also set from
+# init.mt6797.rc for GSIs; vendor_init cannot set debug.* properties.
+debug.renderengine.backend=gles
+
+# adbd: legacy (non-AIO) FunctionFS path; the 3.18 f_fs has no AIO. Set here
+# because vendor_init may not set it.
+ro.adb.nonblocking_ffs=false
+
+# adb over USB from the first boot (post_process_props only adds it with
+# ro.adb.secure=0); authorization still applies.
+persist.sys.usb.config=adb

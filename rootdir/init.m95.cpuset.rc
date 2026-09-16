@@ -1,0 +1,14 @@
+# CPU placement / thermal / LMK patrol (m95-cpuset.sh). Resident: init.rc and
+# the hotplug governor keep rewriting the cpusets, so it re-syncs every five
+# seconds.
+
+service m95_cpuset /vendor/bin/sh /vendor/bin/m95-cpuset.sh
+    # The shared vendor shell cannot transition per script, so set the domain.
+    seclabel u:r:m95_cpuset:s0
+    class core
+    user root
+    group root
+    disabled
+
+on boot
+    start m95_cpuset

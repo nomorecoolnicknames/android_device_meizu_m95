@@ -1,0 +1,5 @@
+# Let the Power HAL (user system) write the PPM PERF_SERV perf_idx node.
+# early-boot: class hal is started from `on boot`.
+on early-boot
+    chown root system /proc/ppm/policy/perfserv_perf_idx
+    chmod 0664 /proc/ppm/policy/perfserv_perf_idx

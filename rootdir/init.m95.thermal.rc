@@ -1,0 +1,29 @@
+# MTK thermal daemons, which apply the tuned policies in /vendor/etc/.tp
+# (including skin, battery and charger limits). Definitions from the stock
+# ramdisk: thermald, thermal and thermalloadalgod run as system,
+# thermal_manager as root (oneshot).
+
+# libmtcloader persists the active policy selection in /data/.tp.
+on post-fs-data
+    mkdir /data/.tp 0775 system system
+
+service thermalloadalgod /vendor/bin/thermalloadalgod
+    class main
+    user system
+    group system
+
+service thermal_manager /vendor/bin/thermal_manager
+    class main
+    user root
+    group system
+    oneshot
+
+service thermal /vendor/bin/thermal
+    class main
+    user system
+    group system
+
+service thermald /vendor/bin/thermald
+    class main
+    user system
+    group system

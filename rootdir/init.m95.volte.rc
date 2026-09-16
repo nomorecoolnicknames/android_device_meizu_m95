@@ -1,0 +1,45 @@
+# VoLTE AP stack services, from the stock init.volte.rc (volte_rcs_ua omitted,
+# its binary is not shipped). All are oneshot and disabled; mtkmal starts and
+# stops them. The domains come from the executables' labels.
+
+service volte_ua /vendor/bin/volte_ua
+    class core
+    socket volte_ua stream 660 root system
+    user root
+    group system log inet radio net_admin root
+    oneshot
+    disabled
+
+service volte_stack /vendor/bin/volte_stack
+    class core
+    socket volte_stack stream 660 root system
+    user root
+    group system log inet radio
+    oneshot
+    disabled
+
+service volte_imcb /vendor/bin/volte_imcb
+    class core
+    socket volte_imsa1 stream 660 root radio
+    socket volte_imsa2 stream 660 root radio
+    socket volte_imsvt1 stream 660 root radio
+    socket volte_imsvt2 stream 660 root radio
+    socket volte_ut stream 660 root radio
+    user root
+    group system log inet radio
+    oneshot
+    disabled
+
+# volte_kicker: forwards the modem's IMS enable indication to mtkmal so the
+# VoLTE daemons start. Runs as radio, which rild-ims requires of its clients.
+service volte_kicker /vendor/bin/volte_kicker
+    class core
+    user radio
+    group radio
+    oneshot
+    disabled
+
+# Off by default: the IMS service sends the enable itself and must be the only
+# MAL client. Enable as a fallback with persist.forge.volte_kicker=1.
+on property:persist.forge.volte_kicker=1
+    start volte_kicker

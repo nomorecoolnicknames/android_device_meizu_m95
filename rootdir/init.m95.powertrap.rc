@@ -1,0 +1,24 @@
+# Power trap (m95-powertrap.sh): logs battery, charger and sleep state at 1 Hz
+# plus power-related kernel log lines to /data/vendor/m95-powertrap.
+# Off by default:
+#   adb root; adb shell setprop persist.vendor.m95.powertrap 1   # starts now and on every boot
+#   adb shell setprop persist.vendor.m95.powertrap 0             # stops, stays off
+
+on post-fs-data
+    mkdir /data/vendor/m95-powertrap 0770 root system
+
+service m95_powertrap /vendor/bin/sh /vendor/bin/m95-powertrap.sh 1
+    # The shared vendor shell cannot transition per script, so set the domain.
+    seclabel u:r:m95_powertrap:s0
+    class late_start
+    user root
+    group root system log
+    disabled
+
+# Persistent properties are loaded after /data is mounted, so this also fires
+# on every boot while the switch is on.
+on property:persist.vendor.m95.powertrap=1
+    start m95_powertrap
+
+on property:persist.vendor.m95.powertrap=0
+    stop m95_powertrap

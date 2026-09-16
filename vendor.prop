@@ -1,0 +1,136 @@
+# Display
+ro.sf.lcd_density=480
+
+# HALs
+ro.hardware.gralloc=mt6797
+ro.hardware.hwcomposer=mt6797
+ro.hardware.camera=mt6797
+ro.hardware.sensors=mt6797
+
+# RIL
+rild.libpath=mtk-ril.so
+rild.libargs=-d /dev/ttyC0
+# The library path is passed with -l on the ril-daemon-mtk command line.
+vendor.rild.libargs=-d /dev/ttyC0
+ro.telephony.default_network=10,10
+persist.radio.multisim.config=dsds
+ro.telephony.sim.count=2
+
+# Modem type selectors: gsm0710muxd needs opt_md1_support, ccci_mdinit
+# needs opt_md3_support.
+ro.boot.opt_md1_support=12
+ro.boot.opt_md3_support=2
+ro.boot.opt_lte_support=1
+ro.boot.opt_irat_support=1
+ro.boot.opt_c2k_support=1
+ro.boot.opt_c2k_lte_mode=2
+ro.boot.opt_eccci_c2k=1
+ro.boot.opt_using_default=1
+
+# RAT
+persist.radio.mtk_ps2_rat=W/G
+persist.radio.mtk_ps3_rat=G
+persist.radio.mtk_dsbp_support=1
+ro.mtk_md_sbp_custom_value=0
+
+# Telephony mode
+ril.first.md=1
+ril.external.md=0
+ril.telephony.mode=0
+mtk.eccci.c2k=enabled
+ro.mtk_c2k_support=1
+ro.mtk_enable_md3=1
+
+# MAL -> rild socket
+ril.mal.socket=rild-mal
+
+# IMS
+persist.mtk_ims_support=1
+persist.mtk_volte_support=1
+persist.mtk.volte.enable=1
+persist.vendor.mtk.volte.enable=1
+# MAL forwards the dedicated VoLTE bearer to IMSM only when this is set.
+ro.mtk_multiple_ims_support=1
+persist.mtk_epdg_support=0
+
+# MTK features
+ro.mtk_clearmotion_support=1
+ro.mtk_deinterlace_support=1
+ro.mtk_trustonic_tee_support=1
+ro.mtk_pq_support=3
+ro.mtk_pq_color_mode=1
+
+# Wi-Fi: connect by SSID only, the driver cannot join a fixed BSSID.
+ro.vendor.wifi.connect_ssid_only=1
+
+wifi.interface=wlan0
+wifi.direct.interface=p2p0
+
+# Hotspot: the driver registers ap0 in AP mode.
+ro.vendor.wifi.sap.interface=ap0
+
+# Camera
+# Verbose MtkCam logging starves 3A.
+persist.mtk.camera.log_level=0
+
+# Report the HAL as HAL3 (device version 3.3).
+debug.camera.force_device=3
+
+# Large YUV output sizes for full resolution stills.
+persist.camera.big_yuv=1
+
+# Advertise RAW16 in the framework stream table (rear and front).
+persist.camera.fake_raw=1
+persist.camera.raw_front=1
+
+# RAW16 row in the vendor stream table (libm95_camera_metadata_raw).
+persist.camera.raw=1
+
+# 4:3 viewfinder sizes (1440x1080, 1280x960).
+persist.camera.preview_43=1
+
+# RAW16 buffers in flight; the HAL reports 1, which throttles ZSL.
+persist.camera.raw_maxbuf=4
+
+# Logging
+log.tag.AudioParamParser=S
+log.tag.SensorHAL=I
+# The PQ service is disabled; silence its per-frame lookup errors.
+log.tag.PQ=S
+
+# Do not log subscriber data (numbers, IMEI) at INFO from vendor tags.
+# To debug, raise a tag for the session: setprop log.tag.AT D
+log.tag.AT=W
+log.tag.RIL=W
+log.tag.MAL-SIMMNGR=W
+log.tag.MAL-IMSM=I
+log.tag.VoLTE_Auto_Testing=W
+
+# Wi-Fi firmware log
+persist.mtk.wcn.fwlog.status=0
+
+# USB: the 3.18 FunctionFS has no AIO.
+sys.usb.ffs.aio_compat=1
+
+# Bluetooth: mask LE Data Length Extension; the firmware does not implement
+# LE Read Maximum Data Length.
+ro.vendor.bt.le_features_mask0=0xdf
+
+# Audio: the Nougat HAL blob lacks the newer struct fields the HIDL wrapper
+# would read; report those methods as not supported.
+ro.vendor.audio.legacy_nougat_abi=1
+
+# Graphics
+ro.opengles.version=196610
+ro.hardware.egl=mali
+
+# Kernel 3.18 is in no Android 13 compatibility matrix; skip the kernel VINTF check.
+ro.vendor.vintf.legacy_kernel=true
+
+# Power
+# Enable MTK hps hotplug, needed for deep idle (only on kernels known to
+# handle it; see m95-cpuset.sh). Override with persist.vendor.m95.hps=0.
+persist.vendor.m95.hps=1
+
+# Thermal profile used by m95-cpuset.sh (0, A, B, C or D).
+ro.vendor.m95.thermal=B

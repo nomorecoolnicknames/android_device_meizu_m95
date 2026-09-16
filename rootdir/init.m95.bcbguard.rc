@@ -1,0 +1,23 @@
+# BCB guard (m95-bcbguard.sh), test images only (M95_TEST_BCBGUARD=true).
+# Armed at `on init`, cleared 300 s after boot_completed, so a crash during
+# boot returns to recovery instead of boot looping.
+
+on init
+    start m95_bcbguard_arm
+
+on property:sys.boot_completed=1
+    start m95_bcbguard_clear
+
+service m95_bcbguard_arm /vendor/bin/sh /vendor/bin/m95-bcbguard.sh arm
+    seclabel u:r:vendor_misc_writer:s0
+    user root
+    group root
+    disabled
+    oneshot
+
+service m95_bcbguard_clear /vendor/bin/sh /vendor/bin/m95-bcbguard.sh clear 300
+    seclabel u:r:vendor_misc_writer:s0
+    user root
+    group root
+    disabled
+    oneshot

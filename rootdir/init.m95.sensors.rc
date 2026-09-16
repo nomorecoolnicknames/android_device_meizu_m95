@@ -1,0 +1,12 @@
+# Sensors HAL service with the input group: the alsps sub-HAL reads light and
+# proximity from /dev/input (0660 root:input).
+# "override" must precede "interface", and this file must be parsed after the
+# AOSP rc: keep the "init." prefix and keep it in /vendor/etc/init.
+service vendor.sensors-hal-1-0 /vendor/bin/hw/android.hardware.sensors@1.0-service
+    override
+    interface android.hardware.sensors@1.0::ISensors default
+    class hal
+    user system
+    group system wakelock uhid context_hub input
+    capabilities BLOCK_SUSPEND
+    rlimit rtprio 10 10
