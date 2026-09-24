@@ -48,6 +48,11 @@ PRODUCT_PACKAGES += \
     libgui_m95 \
     libsensor_m95
 
+# Vendor libcamera_client: the camera HAL1 blobs need it and A13 builds it
+# only for /system.
+PRODUCT_PACKAGES += \
+    libcamera_client_vendor
+
 # Shims
 PRODUCT_PACKAGES += \
     libm95shim_gui \
@@ -156,6 +161,12 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     android.hardware.bluetooth@1.0-impl \
     android.hardware.bluetooth@1.0-service
+
+# Camera: RAW16 for the rear sensor and 4:3 viewfinder sizes. The 32-bit
+# provider loads it via TARGET_LD_SHIM_LIBS and cannot link without it.
+# Runtime toggles: persist.camera.raw / persist.camera.preview_43.
+PRODUCT_PACKAGES += \
+    libm95_camera_metadata_raw
 
 # VoLTE log filter, opt-in: M95_VOLTE_LOGFILTER=true.
 ifeq ($(M95_VOLTE_LOGFILTER),true)

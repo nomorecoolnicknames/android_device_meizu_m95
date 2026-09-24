@@ -1,0 +1,19 @@
+// Appends RAW16 and 4:3 viewfinder rows to the vendor stream tables of the
+// IMX386 and OV5695 (see m95_scaler_raw.cpp). 32-bit only, like the camera
+// provider; must not link against any camera blob.
+cc_library_shared {
+    name: "libm95_camera_metadata_raw",
+    vendor: true,
+    compile_multilib: "32",
+    srcs: ["m95_scaler_raw.cpp"],
+    shared_libs: [
+        "libcutils",
+        "liblog",
+    ],
+    stl: "none",
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-parameter",
+    ],
+}
