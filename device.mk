@@ -174,6 +174,21 @@ PRODUCT_PACKAGES += \
     libm95volte_logfilter
 endif
 
+# Google Camera as the default camera. The APKs are not in git: run
+# gcam/fetch-gcam.sh once, or build with M95_WITHOUT_GCAM=true.
+ifneq ($(M95_WITHOUT_GCAM),true)
+  ifneq ($(words $(wildcard \
+          $(LOCAL_PATH)/gcam/MGC_8.9.097_A11_V25_MGC.apk \
+          $(LOCAL_PATH)/gcam/GcamServicesProvider-1.6.1-photos.apk \
+          $(LOCAL_PATH)/gcam/.fetched)),3)
+    $(error m95: Google Camera is not in $(LOCAL_PATH)/gcam; run $(LOCAL_PATH)/gcam/fetch-gcam.sh, or build with M95_WITHOUT_GCAM=true)
+  endif
+  PRODUCT_PACKAGES += \
+      MGC_8_9_097 \
+      GcamServicesProvider
+  DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-gcam
+endif
+
 # Gatekeeper: AOSP software implementation; the vendor blob needs the N-era
 # libgatekeeper ABI. Existing lock credentials will not verify after switching.
 PRODUCT_PACKAGES += \
