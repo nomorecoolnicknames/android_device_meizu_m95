@@ -104,6 +104,33 @@ PRODUCT_DEVICE := m95
 # lineage_m95.mk; the effective value is 25.
 PRODUCT_SHIPPING_API_LEVEL := 30
 
+# Dalvik heap
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.heapstartsize=8m \
+    dalvik.vm.heapgrowthlimit=288m \
+    dalvik.vm.heapsize=768m \
+    dalvik.vm.heaptargetutilization=0.75 \
+    dalvik.vm.heapminfree=512k \
+    dalvik.vm.heapmaxfree=8m
+
+# Dexpreopt
+# Compile frequently used apps with "speed"; without a profile they would
+# fall back to "verify" and run interpreted until background dexopt.
+PRODUCT_DEXPREOPT_SPEED_APPS += \
+    Settings \
+    LatinIME \
+    Dialer \
+    Contacts \
+    messaging \
+    Aperture \
+    DocumentsUI \
+    IntentResolver \
+    PackageInstaller \
+    TeleService
+
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
+
 # Ramdisk
 # The ueventd graphics/input subsystem blocks are required for display and touch.
 PRODUCT_PACKAGES += \
