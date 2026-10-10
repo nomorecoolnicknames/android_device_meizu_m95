@@ -129,6 +129,14 @@ PRODUCT_PACKAGES += \
     m95-powertrap.sh \
     m95-bdaddr.sh
 
+# BCB guard for test builds: a crash before boot completes returns to recovery
+# instead of boot looping. Enable with M95_TEST_BCBGUARD=true.
+ifeq ($(M95_TEST_BCBGUARD),true)
+PRODUCT_PACKAGES += \
+    init.m95.bcbguard.rc \
+    m95-bcbguard.sh
+endif
+
 # HIDL HALs
 # Each passthrough *-service needs its *-impl.so in /vendor/lib{,64}/hw,
 # otherwise it exits and restarts in a loop.
