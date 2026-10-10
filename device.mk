@@ -21,6 +21,11 @@ PRODUCT_EXTRA_VNDK_VERSIONS := 30
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries-vendor.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
 
+# A-GPS: stock profile list with the default SUPL server switched to
+# supl.google.com; same first-entry-wins rule.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/agps_profiles_conf2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/agps_profiles_conf2.xml
+
 # Audio effects: without a vendor audio_effects.xml the effects factory falls
 # back to /system/etc/audio_effects.conf, which a vendor HAL may not read.
 PRODUCT_COPY_FILES += \
