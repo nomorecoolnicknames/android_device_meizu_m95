@@ -1,0 +1,12 @@
+{
+  "_comment": "MX6 (MT6797, 3.18). One knob holds cores and frequency floors: PPM PERF_SERV /proc/ppm/policy/perfserv_perf_idx (released with 0); PPM thermal still caps it (POWER_BUDGET policies are merged after PERF_SERV, mt_ppm_main.c:547-555, 639-648). A/B test (hps=1, 3 rounds): shade janky 24.3 % at 0, 6.3 % at 6000, 5.5 % at 9362; launcher 15.3 / 3.8 / 0.8 %. Dead on this kernel: hps num_base_perf_serv/input_boost_cpu_num (never read by the 6797 algorithm), PPM userlimit (ppm_userlimit_is_policy_active() returns 0), scaling_min_freq (rewritten by mt_cpufreq ppm_limit_callback). ADPF stays off until its own A/B.",
+  "Nodes": {
+    "perf_idx": {"Type": "value", "Path": "/proc/ppm/policy/perfserv_perf_idx", "Default": "0", "Aggregate": "max_int"}
+  },
+  "Requests": {
+    "interaction": {"HoldMs": 1000, "Set": {"perf_idx": "6000"}},
+    "launch":      {"MaxMs": 1500, "Set": {"perf_idx": "9362"}}
+  },
+  "Adpf": {"Enabled": false},
+  "Supported": {"Boosts": ["INTERACTION"], "Modes": ["LAUNCH", "INTERACTIVE", "DISPLAY_INACTIVE", "LOW_POWER"]}
+}

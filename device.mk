@@ -320,3 +320,9 @@ PRODUCT_COPY_FILES += \
     vendor/meizu/m95/proprietary/vendor/lib64/libnetutils.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libnetutils.so \
     vendor/meizu/m95/proprietary/vendor/lib/libnetutils.so:$(TARGET_COPY_OUT_VENDOR)/lib/libnetutils.so
 
+# Power
+# AIDL Power HAL; power-fleet/ is a vendored copy, do not edit it here.
+PRODUCT_PACKAGES += \
+    android.hardware.power-service.meizu
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/power/fleet_power.json:$(TARGET_COPY_OUT_VENDOR)/etc/power/fleet_power.json
