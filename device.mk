@@ -35,6 +35,12 @@ PRODUCT_PACKAGES += \
     vulkan.mt6797_symlinks \
     librilimp
 
+# RIL: our libril is also built as librilmtk.so, the soname mtk-ril.so needs,
+# so vendor responses bind to our request list. librilimp is the stock MTK
+# libril, renamed. Requires BOARD_USES_MTK_LEGACY_RIL (see BoardConfig.mk).
+PRODUCT_PACKAGES += \
+    librilmtk
+
 # libstdc++ as a vendor copy: the 32-bit Mali closure needs it and it is
 # neither LLNDK nor VNDK.
 PRODUCT_PACKAGES += \

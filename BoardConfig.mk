@@ -161,6 +161,18 @@ WIFI_AVOID_IFACE_RESET_MAC_CHANGE := true
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 
+# RIL
+SIM_COUNT := 2
+
+# N-era MTK RIL blob hosted by the AOSP rild; BOARD_USES_MTK_LEGACY_RIL makes
+# hardware/ril build librilmtk and the MTK-specific code paths.
+BOARD_USES_MTK_HARDWARE := true
+BOARD_USES_MTK_LEGACY_RIL := true
+# Upstream hardware/ril would build a rild that cannot load mtk-ril.so.
+ifeq ($(wildcard hardware/ril/libril/librilmtk_force_needed.c),)
+$(error m95: hardware/ril is not on branch meizu-legacy-vendor (no libril/librilmtk_force_needed.c); rild would be built without librilmtk)
+endif
+
 # Graphics
 # The MTK vendor usage bit 26 must be accepted by the gralloc0 adapter.
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS ?= 0
