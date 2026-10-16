@@ -1,7 +1,9 @@
 #
-# Google Camera as the default camera (MGC 8.9.097 V25) with the GServices
-# shim it needs without GMS, preinstalled on /product. The APKs are not in
-# git; fetch-gcam.sh downloads and verifies them.
+# Google Camera as the MX6's default camera: BSG's MGC 8.9.097 V25 and the
+# GServices shim it cannot start without on a phone with no GMS, preinstalled
+# on /product. Neither APK is in git; fetch-gcam.sh puts them here, checked
+# against pinned sha256, together with the camera's unpacked JNI libraries.
+# device.mk includes them only with M95_WITH_GCAM=true.
 #
 # Both APKs are installed unmodified: the camera is signed with the v3 scheme
 # only, and the prebuilt path would otherwise store its JNI libraries

@@ -220,14 +220,17 @@ PRODUCT_PACKAGES += \
     libm95volte_logfilter
 endif
 
-# Google Camera as the default camera. The APKs are not in git: run
-# gcam/fetch-gcam.sh once, or build with M95_WITHOUT_GCAM=true.
-ifneq ($(M95_WITHOUT_GCAM),true)
+# Google Camera (opt-in): build with M95_WITH_GCAM=true after running
+# gcam/fetch-gcam.sh, which downloads MGC 8.9.097 V25 and the GServices shim it
+# needs without GMS and leaves gcam/.fetched once both hashes and all 25
+# libraries check out. overlay-gcam then points the power-button gesture and the
+# lockscreen shortcut at it. Without it Aperture is the camera app.
+ifeq ($(M95_WITH_GCAM),true)
   ifneq ($(words $(wildcard \
           $(LOCAL_PATH)/gcam/MGC_8.9.097_A11_V25_MGC.apk \
           $(LOCAL_PATH)/gcam/GcamServicesProvider-1.6.1-photos.apk \
           $(LOCAL_PATH)/gcam/.fetched)),3)
-    $(error m95: Google Camera is not in $(LOCAL_PATH)/gcam; run $(LOCAL_PATH)/gcam/fetch-gcam.sh, or build with M95_WITHOUT_GCAM=true)
+    $(error m95: Google Camera is not in $(LOCAL_PATH)/gcam; run $(LOCAL_PATH)/gcam/fetch-gcam.sh first)
   endif
   PRODUCT_PACKAGES += \
       MGC_8_9_097 \
