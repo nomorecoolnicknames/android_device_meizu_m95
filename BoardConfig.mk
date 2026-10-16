@@ -37,8 +37,30 @@ TARGET_BOARD_PLATFORM := mt6797
 TARGET_NO_BOOTLOADER := true
 BOARD_VENDOR := meizu
 
-# Kernel
-# Prebuilt kernel (Linux 3.18); the tree is never built from source here.
+# ---------------------------------------------------------------------------
+# Kernel — PREBUILT, never rebuilt from this tree.
+# ---------------------------------------------------------------------------
+# prebuilt/Image.gz-dtb (since 2026-10-17, build 41) is the kernel that is on
+# the phone: "Linux version 3.18.22-eng-g8a1c65d4 ... Fri Oct 16 23:36:58 MSK
+# 2026", sha256 6a4581a760d8c205..., from ~/meizu-local-builds/
+# mx6-kernel-restored-20261009 branch mx6-k41 @ 8a1c65d4 = charger-mx6
+# f3649519 + b628fe26 (p2p wiphy glue, softAP panic) + 8a1c65d4 (RSN policy on
+# the BSSID search path, H-W1). Config 7a748beb (= softap-rpfct: f14a9250 +
+# IP{,6}_NF_MATCH_RPFILTER + NETFILTER_XT_TARGET_CT for tethering), DTB
+# 31b6230f. Same tree as nomorecoolnicknames/android_kernel_meizu_m95
+# lineage-20.0 (m95_defconfig = this config). Verified on the phone
+# 2026-10-16/17 (the bring-up notes): boot f6416975 = this kernel over
+# the ramdisk of boot 56e9001f; Wi-Fi 5/5 first-attempt joins.
+# Before (2026-10-06 .. build 40): 1c4ce619 c3d605a9, config f14a9250 -- no
+# RPFILTER/CT (softAP tethering failed), no b628fe26 (softAP panic).
+# History: until 2026-10-06 this was kernel/m685 @ 78e751a9 an earlier build (sha256
+# b84b732d...24da7e, copied from the LOS 18.1 build tree), which carried the
+# eBPF, FFS-AIO and dm-bufio/mnt backports Android 13 needs; all of them are in
+# the export line above.
+# УСТАРЕЛО (2026-09-16): раньше здесь стояло «kernel/meizu/m95 намеренно
+# отсутствует, поэтому kernel.mk берёт ветку прибилта». Это больше не так —
+# исходник пришлось подключить ради generated_kernel_includes (см. ниже),
+# а ветка прибилта теперь удерживается флагом TARGET_FORCE_PREBUILT_KERNEL.
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
@@ -71,8 +93,13 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET) \
     --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
     --header_version $(BOARD_BOOT_HEADER_VERSION)
 
-# SELinux is permissive on the kernel command line.
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+# SELinux: ENFORCING since build 41 (no androidboot.selinux on the cmdline).
+# Bring-up was permissive (16.0, 18.1, A13 builds 1..40) until the census was
+# closed: census #7 (sepolicy 06a45b0) on build 40, then the same kernel and
+# ramdisk booted enforcing on the phone (boot bd2ad754, 2026-10-17) and passed
+# boot, Wi-Fi, BT, both cameras, video, audio, sensors, IMS, SMS in/out, USSD,
+# VoLTE out and incoming ringing, softAP start (the bring-up notes).
+# Back to permissive for a bring-up: add androidboot.selinux=permissive here.
 
 # Turn off costly kernel debug features at boot (the prebuilt is built from a
 # debug defconfig, and LK prepends slub_debug=O). Diagnostics only.
