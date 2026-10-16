@@ -1,0 +1,46 @@
+# Android fstab file — Meizu MX6 (m95), MT6797.
+#
+# Raw block nodes, not by-name links: the 3.18 kernel does not reliably
+# create the by-name symlinks.
+#   system=31 cache=32 userdata=33 protect1=11 protect2=12 nvdata=9 nvcfg=8
+#   para=2 boot=26 recovery=1 lk=24 lk2=25 logo=27 expdb=6 nvram=23 proinfo=15
+#
+#<src>                          <mnt_point>  <type>  <mnt_flags>                                           <fs_mgr_flags>
+/dev/block/mmcblk0p31            /system      ext4    ro                                                    wait,first_stage_mount
+# /vendor lives on the `custom` partition (mmcblk0p3, 512 MiB).
+# First-stage mount uses the ramdisk copy of this file.
+/dev/block/mmcblk0p3             /vendor      ext4    ro                                                    wait,first_stage_mount
+# /cache is nofail: a failed mount makes mount_all fail, and init then never
+# sets ro.crypto.state, so zygote never starts.
+# Not formattable: A13 mke2fs defaults may enable ext4 features the 3.18
+# kernel lacks, and a failed format reboots into recovery with --wipe_data.
+/dev/block/mmcblk0p32            /cache       ext4    noatime,nosuid,nodev,noauto_da_alloc,discard          wait,check,nofail
+/dev/block/mmcblk0p33            /data        f2fs    noatime,nosuid,nodev,discard                          wait,check,formattable
+# MTK protected/NV partitions. nofail: a failed NV mount must not make
+# mount_all fail (init would then never set ro.crypto.state).
+/dev/block/mmcblk0p11            /protect_f   ext4    noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc  wait,check,formattable,nofail
+/dev/block/mmcblk0p12            /protect_s   ext4    noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc  wait,check,formattable,nofail
+/dev/block/mmcblk0p9             /nvdata      ext4    noatime,nosuid,nodev,noauto_da_alloc,discard          wait,check,formattable,nofail
+/dev/block/mmcblk0p8             /nvcfg       ext4    noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc  wait,check,formattable,nofail
+# BCB: no misc partition on this device — para carries the MTK BCB.
+/dev/block/mmcblk0p2             /misc        emmc    defaults                                              defaults
+/dev/block/mmcblk0p26            /boot        emmc    defaults                                              defaults
+/dev/block/mmcblk0p1             /recovery    emmc    defaults                                              defaults
+/dev/block/mmcblk0p24            /bootloader  emmc    defaults                                              defaults
+/dev/block/mmcblk0p25            /bootloader2 emmc    defaults                                              defaults
+/dev/block/mmcblk0p27            /logo        emmc    defaults                                              defaults
+/dev/block/mmcblk0p6             /expdb       emmc    defaults                                              defaults
+/dev/block/mmcblk0p23            /nvram       emmc    defaults                                              defaults
+/dev/block/mmcblk0p15            /proinfo     emmc    defaults                                              defaults
+# /metadata (mmcblk0p10, 32 MiB) is not mounted: its filesystem is unknown
+# and it is not needed to boot. To enable, check it with blkid first:
+# /dev/block/mmcblk0p10          /metadata    ext4    noatime,nosuid,nodev,discard          wait,formattable,first_stage_mount,nofail
+
+# USB OTG (no external SD slot on this device)
+/devices/soc/11270000.usb3_xhci*                                    auto         vfat    defaults                                              voldmanaged=usbotg:auto
+
+# zram swap: 2 GiB, lzo (the only compressor in this kernel). Without it
+# the system thrashes under memory pressure.
+# The 3.18 driver rejects max_comp_streams < 1 and keeps a single stream; it
+# must be set before disksize, which is the order fs_mgr uses.
+/dev/block/zram0    none    swap    defaults    zramsize=2147483648,max_comp_streams=4

@@ -1,0 +1,17 @@
+# Goodix fingerprint daemon — Meizu MX6 (m95).
+#
+# Publishes android.hardware.fingerprint.IGoodixFingerprintDaemon, which the
+# Goodix fingerprint.default.so HAL module connects to. The daemon also issues
+# GF_IOC_INPUT_KEY_EVENT on /dev/goodix_fp: without it a tap on the sensor
+# produces no input event (the mBack key).
+
+on post-fs-data
+    # Template and calibration store used by libgf_hal, which creates the
+    # subdirectories itself.
+    mkdir /data/gf_data 0700 system system
+
+# Runs in the vendor domain goodixfpd through goodixfpd_exec; no seclabel.
+service goodixfpd /vendor/bin/goodixfingerprintd
+    class main
+    user system
+    group system

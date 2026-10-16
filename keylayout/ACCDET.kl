@@ -1,0 +1,9 @@
+# ACCDET — MTK headset jack keys (event0 on the live device).
+# Standard MTK accdet scan codes, copied from the working m681 layout.
+key 122   ENDCALL
+key 163   MEDIA_NEXT
+key 164   HEADSETHOOK
+key 165   MEDIA_PREVIOUS
+key 114   VOLUME_DOWN
+key 115   VOLUME_UP
+key 582   VOICE_ASSIST

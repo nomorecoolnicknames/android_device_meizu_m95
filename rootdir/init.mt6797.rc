@@ -1,0 +1,174 @@
+# init.mt6797.rc — Meizu MX6 (m95) device init.
+#
+# Subsystems live in their own files below. Only services whose binary ships
+# in the vendor blobs and whose domain exists in sepolicy are defined.
+
+# init imports only init.${ro.hardware}.rc from /vendor/etc/init/hw, so every
+# sibling rc in hw/ is imported here by its installed path.
+import /vendor/etc/init/hw/init.mt6797.usb.rc
+import /vendor/etc/init/hw/init.m95.modem.rc
+import /vendor/etc/init/hw/init.m95.connectivity.rc
+import /vendor/etc/init/hw/init.m95.tee.rc
+import /vendor/etc/init/hw/init.m95.thermal.rc
+import /vendor/etc/init/hw/init.m95.cpuset.rc
+import /vendor/etc/init/hw/init.m95.powertrap.rc
+import /vendor/etc/init/hw/init.m95.mem.rc
+import /vendor/etc/init/hw/init.m95.volte.rc
+import /vendor/etc/init/hw/goodixfpd.rc
+
+on early-init
+    # The MTK vendor stack expects debugfs (memtrack walks /d/ion/clients,
+    # KernelWakelockReader reads /d/wakeup_sources).
+    mount debugfs debugfs /sys/kernel/debug
+    chmod 0755 /sys/kernel/debug
+    # atrace.rc sets this on late-init, but /system rc files are parsed only
+    # after late-init on this legacy-fstab device.
+    chmod 0222 /sys/kernel/debug/tracing/trace_marker
+
+    # Restrict the kernel log to CAP_SYSLOG: this kernel leaves it readable
+    # by every uid, and it contains key presses, charger and radio state.
+    write /proc/sys/kernel/dmesg_restrict 1
+
+    # Load firmware directly from /vendor/firmware. This kernel only searches
+    # /lib/firmware*, so each request falls back to the user helper; the
+    # uevent from the firmware cache taken on every suspend attempt wakes the
+    # health HAL (EPOLLWAKEUP) and aborts the suspend.
+    write /sys/module/firmware_class/parameters/path /vendor/firmware
+
+on init
+    # Mali r12p0 faults on Skia-GL jobs; use the GLES RenderEngine. This must
+    # be set from rc: init drops the property from vendor build.prop.
+    setprop debug.renderengine.backend gles
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+
+    # cameraserver and the camera provider write to the camera-daemon cpuset,
+    # which nothing else creates. MT6797 has 10 cores.
+    mkdir /dev/cpuset/camera-daemon
+    write /dev/cpuset/camera-daemon/cpus 0-9
+    write /dev/cpuset/camera-daemon/mems 0
+    chown system system /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon/tasks
+    chmod 0664 /dev/cpuset/camera-daemon/tasks
+
+on fs
+    # Relabel the MTK block nodes created before policy load.
+    restorecon_recursive /dev/block/platform/mtk-msdc.0
+
+    # Mount points for the MTK NV partitions; they do not exist in the ramdisk.
+    mkdir /nvdata 0771 root system
+    mkdir /nvcfg 0771 root system
+    mkdir /protect_f 0771 system system
+    mkdir /protect_s 0771 system system
+
+    # The ramdisk copy of the fstab is gone after switch_root. system and
+    # vendor are mounted by first-stage init.
+    mount_all /vendor/etc/fstab.mt6797
+
+on post-fs
+    # Freshly formatted ext4 NV partitions come up unlabeled.
+    restorecon_recursive /nvdata
+    restorecon_recursive /nvcfg
+    restorecon_recursive /protect_f
+    restorecon_recursive /protect_s
+
+    # Backlight
+    chown system system /sys/class/leds/lcd-backlight/brightness
+    chmod 0660 /sys/class/leds/lcd-backlight/brightness
+    chown system system /sys/class/leds/button-backlight/brightness
+    chmod 0660 /sys/class/leds/button-backlight/brightness
+
+on post-fs-data
+
+    # /data/md3 predates its own SELinux label (ccci_data_file); files created
+    # before the label existed still carry system_data_file, which ccci_fsd may
+    # not write under enforcing. Relabel once so the policy actually applies.
+    restorecon_recursive /data/md3
+    restorecon /data/iNemoEngine_gbias.dat
+    # Legacy NV mirror used by nvram_daemon and ccci_mdinit.
+    mkdir /data/nvram 0771 root system
+    # nvram_daemon copies fstab* from / into /data/nvram and libnvram parses
+    # /data/nvram/fstab.<ro.hardware>; the A13 root has no fstab, so provide
+    # it here. Without it nvram_init never completes and audio, ccci_mdinit,
+    # GPS and MAL all wait on it.
+    copy /vendor/etc/fstab.mt6797 /data/nvram/fstab.mt6797
+    chmod 0644 /data/nvram/fstab.mt6797
+    mkdir /data/misc/sensor 0777 system system
+    setprop vold.post_fs_data_done 1
+
+on boot
+    # mtkfb sysfs perms
+    chown system graphics /sys/class/graphics/fb0/blank
+    chmod 0660 /sys/class/graphics/fb0/blank
+
+    # mx-led (home button halo) blink support for the lights HAL. The timer
+    # trigger attrs are created root-only when the trigger is set, so enable
+    # it once here, chown the attrs and leave it on; the HAL only writes
+    # delay_on/delay_off (delay_off=0 = solid) and brightness.
+    write /sys/class/leds/mx-led/trigger timer
+    chown system system /sys/class/leds/mx-led/delay_on
+    chown system system /sys/class/leds/mx-led/delay_off
+    chmod 0664 /sys/class/leds/mx-led/delay_on
+    chmod 0664 /sys/class/leds/mx-led/delay_off
+    write /sys/class/leds/mx-led/delay_on 1000
+    write /sys/class/leds/mx-led/delay_off 0
+    write /sys/class/leds/mx-led/brightness 0
+
+    # Camera flash brightness floor. The 3A blob requests low LM3644 duty
+    # indexes and captures in torch mode, which underexposes flash frames.
+    # Index 5 is the top of the torch table (140 mA); the torch also starts
+    # there, within the LM3644 torch spec.
+    write /sys/class/flashlightdrv/kd_camera_flashlight/min_duty 5
+
+# SPM firmware: without it the SoC cannot suspend or enter deep idle, and
+# Vcore DVFS never initialises. The kernel loads the pcm firmware when
+# /dev/spm is opened; spm_loader does that and exits.
+service spm_script /vendor/bin/spm_loader
+    class core
+    user system
+    group system
+    oneshot
+
+# NVRAM: IMEI, Wi-Fi MAC and RF calibration. ccci_mdinit depends on it.
+service nvram_daemon /vendor/bin/nvram_daemon
+    class main
+    user root
+    group system
+    oneshot
+
+# Registers the "NvRAMAgent" binder service; the name must match
+# nvram_agent_service in service_contexts.
+service NvRAMAgent /vendor/bin/nvram_agent_binder
+    class main
+    user system
+    group system
+
+# Battery
+# MTK fuel-gauge daemon (bq27532 gauge).
+service fuelgauged /vendor/bin/fuelgauged
+    class main
+    user root
+    group root
+
+# Battery status monitor: not started. It polls
+# /sys/devices/platform/mt-battery/BatteryNotify, which does not exist with
+# this kernel's bq2589x + bq27532 battery stack.
+service batterywarning /vendor/bin/batterywarning
+    class main
+    user system
+    group system
+    disabled
+
+# MTK picture-quality service. Disabled by default: with the 32-bit PQ blob
+# the camera provider aborts in libpqservice.so (PQClient::getAshmem) during
+# preview. Opt in with persist.m95.pq.enable=1.
+service pq /vendor/bin/pq
+    class main
+    user system
+    group system graphics
+    disabled
+
+on property:persist.m95.pq.enable=1
+    start pq
+
+on property:persist.m95.pq.enable=0
+    stop pq

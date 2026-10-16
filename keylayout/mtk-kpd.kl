@@ -1,0 +1,18 @@
+# mtk-kpd — MTK hardware key pad (event2 on the live device).
+# MX6 physical keys: volume up/down + power. The rest of the standard MTK
+# scan-code table is kept (harmless) — copied from the working m681 layout.
+key 115   VOLUME_UP
+key 114   VOLUME_DOWN
+key 116   POWER
+key 113   MUTE
+key 102   HOME
+key 158   BACK
+key 217   SEARCH
+key 212   CAMERA
+key 211   FOCUS
+key 164   MEDIA_PLAY_PAUSE
+key 128   MEDIA_STOP
+key 163   MEDIA_NEXT
+key 165   MEDIA_PREVIOUS
+key 168   MEDIA_REWIND
+key 159   MEDIA_FAST_FORWARD

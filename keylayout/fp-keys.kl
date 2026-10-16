@@ -1,0 +1,52 @@
+# fp-keys -- Meizu mTouch (Goodix) input node, /dev/input/event1.
+#
+# PRODUCER: drivers/misc/mediatek/fingerprint/goodix_tee/gf/gf_spi_tee.c
+# (CONFIG_FINGERPRINT_GOODIX_TEE=y, GF_INPUT_NAME "fp-keys" at :68). This node
+# emits nothing on its own: every input_report_key() in the driver sits inside
+# "case GF_IOC_INPUT_KEY_EVENT" of gf_ioctl() (:821-899). gf_irq() (:689-703)
+# only pushes a netlink message. A key therefore appears here only when the
+# Goodix userspace daemon issues that ioctl on /dev/goodix_fp. No such process
+# exists on this build yet (no goodixfingerprintd, no fingerprint HIDL
+# service), and /proc/interrupts has no goodix_fp_irq line because GF_IOC_INIT
+# was never called -- so as of today this whole file is inert and the mTouch
+# tap produces no event at all.
+#
+# WHAT THE COMPILED DRIVER CAN EMIT: GF_INPUT_KEY_DEBOUNCE is #define'd at
+# :93, so only the debounce branch (:839-861) is built and :862-898 is dead
+# code. In that branch key_event is:
+#     GF_KEY_HOME  -> GF_INPUT_BACK_KEY  = KEY_BACK  (158)   <- "tap = Back"
+#     GF_KEY_POWER -> GF_INPUT_FF_KEY    = KEY_POWER (116)
+#     anything else-> GF_INPUT_OTHER_KEY = KEY_VOLUMEDOWN (114), which is NOT
+#                     in this node's keybit and is dropped by the input core.
+# GF_KEY_HOME is remapped to BACK in the kernel on purpose (:828-829, with
+# GF_INPUT_HOME_KEY commented out) -- that is the Meizu mBack behaviour. The
+# event fires on release only, and only if the touch lasted < 1000 ms.
+#
+# ADVERTISED KEYBIT (gf_spi_tee.c:1793-1802, confirmed live with
+# "getevent -pl /dev/input/event1"):
+#     103 KEY_UP   105 KEY_LEFT  106 KEY_RIGHT  108 KEY_DOWN
+#     116 KEY_POWER  139 KEY_MENU  158 KEY_BACK  172 KEY_HOMEPAGE
+# Everything below 158 is only reachable from the uncompiled #else branch. It
+# is mapped anyway so this layout describes the node truthfully: Android does
+# not fall back to Generic.kl per scan code once a device layout is loaded, so
+# an unmapped advertised code would silently become AKEYCODE_UNKNOWN.
+#
+# 116 (KEY_POWER / GF_INPUT_FF_KEY) IS DELIBERATELY LEFT UNMAPPED. It is
+# reachable in the live branch, but stock Flyme does not map it either
+# (stock/system-extracted/usr/keylayout/fp-keys.kl is only "key 196 FINGERPRINT
+# / key 158 FINGERPRINT") and a spurious POWER from the sensor would toggle the
+# screen. Add "key 116 POWER" only after observing the Goodix daemon actually
+# send GF_KEY_POWER.
+#
+# Removed from the previous revision (all were mirrored from the m681 FPC1020
+# port and are scan codes this driver never sets in keybit, so they could never
+# fire): 102, 196, 232. 139 was mapped to BACK, which contradicts the driver's
+# GF_INPUT_MENU_KEY; it is corrected to MENU here.
+
+key 158   BACK        # GF_INPUT_BACK_KEY  - the only live path: mTouch tap = Back
+key 172   HOME        # GF_INPUT_HOME_KEY  - #else branch only, not compiled
+key 139   MENU        # GF_INPUT_MENU_KEY  - not emitted by either branch
+key 103   DPAD_UP     # GF_NAV_UP_KEY      - #else branch only, not compiled
+key 108   DPAD_DOWN   # GF_NAV_DOWN_KEY    - #else branch only, not compiled
+key 105   DPAD_LEFT   # GF_NAV_LEFT_KEY    - #else branch only, not compiled
+key 106   DPAD_RIGHT  # GF_NAV_RIGHT_KEY   - #else branch only, not compiled
