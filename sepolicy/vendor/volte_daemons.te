@@ -40,6 +40,8 @@ allow volte_ua self:capability setgid;
 # IPsec SAs for IMS signalling over netlink xfrm
 allow volte_stack self:capability net_admin;
 allow volte_stack self:netlink_xfrm_socket { create bind read write nlmsg_read };
+# volte_stack installs the IMS SAs itself.
+allow volte_stack self:netlink_xfrm_socket nlmsg_write;
 
 # volte_imcb looks up the ccci nodes in sysfs.
 allow volte_imcb sysfs_ccci:dir search;

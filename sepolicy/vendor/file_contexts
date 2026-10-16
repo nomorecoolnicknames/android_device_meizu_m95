@@ -261,7 +261,12 @@
 # PQ customization libraries, loaded through libpq_prot/libdpframework.
 /(vendor|system/vendor)/lib(64)?/libpq_cust_base\.so      u:object_r:same_process_hal_file:s0
 /(vendor|system/vendor)/lib(64)?/libpq_cust\.so           u:object_r:same_process_hal_file:s0
-# Vendor public library closure of libwfo_jni (IMS service).
+# PerfService client stub (shims/perfservice.c), dlopen()ed by the SP-HAL
+# closure in surfaceflinger, bootanim and zygote. It needs only VNDK-SP/LLNDK.
+/(vendor|system/vendor)/lib(64)?/libperfservicenative\.so u:object_r:same_process_hal_file:s0
+# The IMS service (radio) loads libwfo_jni.so as a vendor public library
+# (configs/public.libraries-vendor.txt) and needs its vendor closure readable:
+# libmal, libmdfx and the vendor copy of libnativehelper (in lib{,64}/hw).
 /(vendor|system/vendor)/lib(64)?/libwfo_jni\.so           u:object_r:vendor_public_lib_file:s0
 /(vendor|system/vendor)/lib(64)?/libmal\.so               u:object_r:vendor_public_lib_file:s0
 /(vendor|system/vendor)/lib(64)?/libmdfx\.so              u:object_r:vendor_public_lib_file:s0

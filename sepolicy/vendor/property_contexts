@@ -110,6 +110,10 @@ ril.data.mal                    u:object_r:m95_mtk_ril_prop:s0
 ril.rilproxy                    u:object_r:m95_mtk_ril_prop:s0
 persist.radio.mtk_              u:object_r:m95_mtk_ril_prop:s0
 persist.radio.mnl.prop          u:object_r:m95_mtk_ril_prop:s0
+# Set by rild and read by mtkmal (SIM switch and the SIM-based provisioning
+# operator id); nothing on /system reads them.
+persist.radio.simswitch         u:object_r:m95_mtk_ril_prop:s0
+persist.radio.sim.sbp           u:object_r:m95_mtk_ril_prop:s0
 
 # Modem status published by ccci_mdinit
 net.cdma.mdmstat                u:object_r:mtk_md_prop:s0

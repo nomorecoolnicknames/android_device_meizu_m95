@@ -25,3 +25,7 @@ vndbinder_use(pq)
 add_service(pq, pq_vndservice)
 allow { mediacodec hal_camera_default } pq_vndservice:service_manager find;
 binder_call({ mediacodec hal_camera_default }, pq)
+
+# The composer looks PQ up too and retries constantly when denied.
+allow hal_graphics_composer_default pq_vndservice:service_manager find;
+binder_call(hal_graphics_composer_default, pq)

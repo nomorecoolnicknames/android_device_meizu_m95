@@ -8,3 +8,8 @@ allow kernel nvdata_file:file r_file_perms;
 
 # dac_override is a spurious capable() probe: DAC already allows the access.
 dontaudit kernel self:capability dac_override;
+
+# The Wi-Fi driver probes the optional /data/misc/wifi/wifi.cfg (wifi:wifi
+# 0770) on every power-on. The file does not exist and the driver falls back
+# to its defaults; the allow is neverallowed, so silence the probe.
+dontaudit kernel self:capability dac_read_search;
