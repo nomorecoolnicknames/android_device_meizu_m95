@@ -168,23 +168,6 @@ LOCAL_SRC_FILES    := m95-powertrap.sh
 LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_EXECUTABLES)
 include $(BUILD_PREBUILT)
 
-# BCB guard, test images only (M95_TEST_BCBGUARD); the rc needs no import.
-include $(CLEAR_VARS)
-LOCAL_MODULE       := init.m95.bcbguard.rc
-LOCAL_MODULE_TAGS  := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := init.m95.bcbguard.rc
-LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/init
-include $(BUILD_PREBUILT)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE       := m95-bcbguard.sh
-LOCAL_MODULE_TAGS  := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := m95-bcbguard.sh
-LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_EXECUTABLES)
-include $(BUILD_PREBUILT)
-
 # Sourced by m95-cpuset.sh when persist.vendor.m95.perfprofile=1
 include $(CLEAR_VARS)
 LOCAL_MODULE       := m95-perfprofile.sh
