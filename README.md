@@ -45,7 +45,7 @@ and the kernel ([android_kernel_meizu_m95](https://github.com/nomorecoolnickname
 - The IMS service (MtkImsService) will be provided by device/meizu/common/ims; until it is published the build stops with an error.
 - Stock-derived init, fstab, keylayout, media and carrier profile files are supplied separately.
 
-A boot image built from the kernel source has not been tested on the phone yet.
+A boot image built from the kernel source was tested on the phone.
 Google Camera is optional: run `gcam/fetch-gcam.sh` and build with `M95_WITH_GCAM=true`.
 No ADB keys are preinstalled; set `M95_ADB_KEYS` only for your own test setup.
 
